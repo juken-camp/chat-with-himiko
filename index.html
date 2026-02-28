@@ -419,12 +419,43 @@ function getFallbackSuggestions(ch){
   return ["もう少し詳しく教えて","入試ではどう出題されるの？","他の人物との関係を教えて"];
 }
 
+// LINE風効果音
+let audioCtx=null;
+function getAudioCtx(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)();return audioCtx;}
+function playSendSound(){
+  try{
+    const ctx=getAudioCtx();const t=ctx.currentTime;
+    const o=ctx.createOscillator();const g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type="sine";o.frequency.setValueAtTime(1200,t);o.frequency.exponentialRampToValueAtTime(1800,t+0.08);
+    g.gain.setValueAtTime(0.15,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.12);
+    o.start(t);o.stop(t+0.12);
+  }catch(e){}
+}
+function playReceiveSound(){
+  try{
+    const ctx=getAudioCtx();const t=ctx.currentTime;
+    const o1=ctx.createOscillator();const o2=ctx.createOscillator();
+    const g1=ctx.createGain();const g2=ctx.createGain();
+    o1.connect(g1);g1.connect(ctx.destination);
+    o2.connect(g2);g2.connect(ctx.destination);
+    o1.type="sine";o1.frequency.setValueAtTime(880,t);
+    g1.gain.setValueAtTime(0.12,t);g1.gain.exponentialRampToValueAtTime(0.001,t+0.1);
+    o1.start(t);o1.stop(t+0.1);
+    o2.type="sine";o2.frequency.setValueAtTime(1320,t+0.08);
+    g2.gain.setValueAtTime(0.001,t+0.08);g2.gain.linearRampToValueAtTime(0.12,t+0.09);
+    g2.gain.exponentialRampToValueAtTime(0.001,t+0.2);
+    o2.start(t+0.08);o2.stop(t+0.2);
+  }catch(e){}
+}
+
 async function sendMessage(text){
   if(!text||!text.trim()||isLoading||!currentChar)return;
   messages.push({role:"user",content:text.trim()});
   document.getElementById("msg-input").value="";
   dynamicSuggestions=[];
   isLoading=true;renderMessages();
+  playSendSound();
   try{
     const apiMessages=messages.map((m,i)=>{
       if(m.role==="user"&&i===messages.length-1){
@@ -449,6 +480,7 @@ async function sendMessage(text){
     const parsed=parseSuggestions(rawReply);
     messages.push({role:"assistant",content:parsed.text});
     dynamicSuggestions=parsed.suggestions.length>0?parsed.suggestions:getFallbackSuggestions(currentChar);
+    playReceiveSound();
   }catch(e){
     messages.push({role:"assistant",content:`⚠️ 接続エラーが発生しました。(${e.message}) もう一度お試しください。`});
     dynamicSuggestions=[];
