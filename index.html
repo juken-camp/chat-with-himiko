@@ -36,8 +36,8 @@
     .card-name-row{display:flex;align-items:center;gap:7px;margin-bottom:3px}
     .card-tag{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:800;flex-shrink:0}
     .online-badge{font-size:10px;padding:2px 7px;border-radius:100px;background:#dcfce7;color:#16a34a;font-weight:800}
-    .explainer-badge{font-size:10px;padding:2px 7px;border-radius:100px;background:#fef3c7;color:#92400e;font-weight:800;border:1px solid #fde68a}
-    .narrator-badge{font-size:10px;padding:2px 7px;border-radius:100px;background:#dcfce7;color:#166534;font-weight:800;border:1px solid #bbf7d0}
+    .explainer-badge{font-size:10px;padding:2px 7px;border-radius:100px;background:#ede9fe;color:#6d28d9;font-weight:800;border:1px solid #ddd6fe}
+    .narrator-badge{font-size:10px;padding:2px 7px;border-radius:100px;background:#ede9fe;color:#6d28d9;font-weight:800;border:1px solid #ddd6fe}
     .chat-header{background:#fff;border-bottom:2px solid #f1f5f9;padding:10px 14px;display:flex;align-items:center;gap:11px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.06);position:relative;z-index:10;}
     .back-btn{background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;padding:6px 12px;color:#64748b;cursor:pointer;font-size:12px;font-weight:800}
     .chat-avatar{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
@@ -119,8 +119,8 @@
       </div>
     </div>
     <div id="online-badge" class="hidden online-badge">🟢 オンライン</div>
-    <div id="explainer-badge" class="hidden explainer-badge">⚠️ 歴史的教訓</div>
-  <div id="narrator-badge" class="hidden narrator-badge">🕊️ 敬意配慮</div>
+    <div id="explainer-badge" class="hidden explainer-badge">📖 解説モード（⚠️ 歴史的教訓）</div>
+    <div id="narrator-badge" class="hidden narrator-badge">📖 解説モード（🕊️ 敬意配慮）</div>
   </div>
   <div class="messages" id="messages"></div>
   <div class="input-area">
@@ -238,7 +238,7 @@ const CHARACTERS = [
   {id:48,name:"ゴルバチョフ",period:"ソ連（1931〜2022年）",emoji:"🕊️",tag:"世界史",tagColor:"#047857",catchphrase:"ペレストロイカで冷戦終結を導いたソ連最後の書記長",color:"#059669",accent:"#6EE7B7",bio:"ペレストロイカ・グラスノスチで改革を推進。冷戦終結・ソ連崩壊につながった最後の書記長。",prompt:`あなたはゴルバチョフです。一人称は「私」。改革への信念と複雑な心情を持つ口調。語尾は「〜だ」「〜だな」「〜しよう」などタメ語で統一し、「です・ます」調は使わないこと。冷戦終結・ソ連解体を語る。中学3年生にわかる言葉で。回答は150-250文字。後世では記録が少なく不明な点も多い——そういった事柄については「後の世では諸説あるようだが…」「記録が残っていないから…」のように、わからないことはわからないと率直に伝えること。断定しないこと。自分の時代・知識の外にあることを聞かれたら「それは私の知らない話だ」「記録が残っていない」と率直に答え、推測で断言しないこと。`,greeting:"冷戦を終わらせた——でも同時にソ連も終わった。ゴルバチョフだ。改革が国を崩すとはどういうことか、話そう。",qs:["冷戦ってどんな対立だったの？","ペレストロイカ・グラスノスチって何なの？","ソ連はなぜ崩壊したの？","冷戦が終わった後の世界はどうなったの？"]}
 ]
 
-const TAGS=[{id:"all",label:"すべて",emoji:"📋"},{id:"special",label:"AI先生",emoji:"🤖"},{id:"日本史",label:"日本史",emoji:"🏯"},{id:"世界史",label:"世界史",emoji:"🌍"},{id:"古代",label:"古代",emoji:"🏺"},{id:"中世",label:"中世",emoji:"⚔️"},{id:"近世",label:"近世",emoji:"🏯"},{id:"近代",label:"近代",emoji:"🚂"},{id:"現代",label:"現代",emoji:"🌐"},{id:"explainer",label:"歴史的教訓",emoji:"⚠️"},{id:"narrator",label:"敬意配慮",emoji:"🕊️"}];
+const TAGS=[{id:"all",label:"すべて",emoji:"📋"},{id:"special",label:"AI先生",emoji:"🤖"},{id:"日本史",label:"日本史",emoji:"🏯"},{id:"世界史",label:"世界史",emoji:"🌍"},{id:"古代",label:"古代",emoji:"🏺"},{id:"中世",label:"中世",emoji:"⚔️"},{id:"近世",label:"近世",emoji:"🏯"},{id:"近代",label:"近代",emoji:"🚂"},{id:"現代",label:"現代",emoji:"🌐"},{id:"kaisetsu",label:"解説モード",emoji:"📖"},{id:"explainer",label:"歴史的教訓",emoji:"⚠️"},{id:"narrator",label:"敬意配慮",emoji:"🕊️"}];
 const allChars=[AI_SENSEI,...CHARACTERS];
 let currentTag="all",currentChar=null,messages=[],isLoading=false;
 
@@ -259,7 +259,7 @@ function getEra(period) {
 }
 function renderTags(){
   document.getElementById("tag-bar").innerHTML=TAGS.map(t=>{
-    const eraTags=["古代","中世","近世","近代","現代"];const cnt=t.id==="all"?allChars.length:t.id==="special"?1:t.id==="explainer"?CHARACTERS.filter(c=>c.isExplainer).length:t.id==="narrator"?CHARACTERS.filter(c=>c.isNarrator).length:eraTags.includes(t.id)?CHARACTERS.filter(c=>getEra(c.period).id===t.id).length:CHARACTERS.filter(c=>c.tag===t.id).length;
+    const eraTags=["古代","中世","近世","近代","現代"];const cnt=t.id==="all"?allChars.length:t.id==="special"?1:t.id==="kaisetsu"?CHARACTERS.filter(c=>c.isExplainer||c.isNarrator).length:t.id==="explainer"?CHARACTERS.filter(c=>c.isExplainer).length:t.id==="narrator"?CHARACTERS.filter(c=>c.isNarrator).length:eraTags.includes(t.id)?CHARACTERS.filter(c=>getEra(c.period).id===t.id).length:CHARACTERS.filter(c=>c.tag===t.id).length;
     return`<button class="tag-btn${currentTag===t.id?" active":""}" onclick="setTag('${t.id}')">${t.emoji} ${t.label} <span style="opacity:.65;font-size:11px">(${cnt})</span></button>`;
   }).join("");
 }
@@ -268,7 +268,7 @@ function setTag(id){currentTag=id;renderTags();renderCards();}
 
 function renderCards(){
   const q=document.getElementById("search-input").value.toLowerCase();
-  const eraTags2=["古代","中世","近世","近代","現代"];let list=currentTag==="special"?[AI_SENSEI]:currentTag==="all"?allChars:currentTag==="explainer"?CHARACTERS.filter(c=>c.isExplainer):currentTag==="narrator"?CHARACTERS.filter(c=>c.isNarrator):eraTags2.includes(currentTag)?CHARACTERS.filter(c=>getEra(c.period).id===currentTag):[AI_SENSEI,...CHARACTERS.filter(c=>c.tag===currentTag)];
+  const eraTags2=["古代","中世","近世","近代","現代"];let list=currentTag==="special"?[AI_SENSEI]:currentTag==="all"?allChars:currentTag==="kaisetsu"?CHARACTERS.filter(c=>c.isExplainer||c.isNarrator):currentTag==="explainer"?CHARACTERS.filter(c=>c.isExplainer):currentTag==="narrator"?CHARACTERS.filter(c=>c.isNarrator):eraTags2.includes(currentTag)?CHARACTERS.filter(c=>getEra(c.period).id===currentTag):[AI_SENSEI,...CHARACTERS.filter(c=>c.tag===currentTag)];
   if(q)list=list.filter(c=>c.name.toLowerCase().includes(q)||c.period.toLowerCase().includes(q)||c.catchphrase.toLowerCase().includes(q));
   const el=document.getElementById("card-list");
   if(!list.length){el.innerHTML=`<div class="empty-state"><div style="font-size:36px;margin-bottom:10px">🔍</div><div style="font-weight:700">該当する人物が見つかりません</div></div>`;return;}
@@ -286,8 +286,8 @@ function renderCards(){
             <span style="font-size:16px;font-weight:900;color:#1e293b">${esc(ch.name)}</span>
             <span class="card-tag" style="background:${ch.tagColor||ch.color}18;color:${ch.tagColor||ch.color}">${ai?"AI先生":ch.tag}</span>
             ${ai?`<span class="online-badge">オンライン</span>`:""}
-            ${ch.isExplainer?`<span class="explainer-badge">⚠️ 歴史的教訓</span>`:""}
-            ${ch.isNarrator?`<span class="narrator-badge">🕊️ 敬意配慮</span>`:""}
+            ${ch.isExplainer?`<span class="explainer-badge">📖 解説モード</span>`:""}
+            ${ch.isNarrator?`<span class="narrator-badge">📖 解説モード</span>`:""}
           </div>
           <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;display:flex;align-items:center;gap:5px">${esc(ch.period)}${!ai?(function(){const e=getEra(ch.period);return '<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:'+e.bg+';color:'+e.color+';font-weight:800">'+e.label+'</span>';})():""}</div>
           <div style="font-size:12px;font-weight:700;color:${ch.color};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ai?"💬 ":"💡 "}${esc(ch.catchphrase)}</div>
@@ -325,7 +325,9 @@ function showList(){
   document.getElementById("list-view").classList.remove("hidden");
   currentChar=null;messages=[];
   requestAnimationFrame(()=>{
-    window.scrollTo(0,listScrollY);
+    requestAnimationFrame(()=>{
+      window.scrollTo(0,listScrollY);
+    });
   });
 }
 
