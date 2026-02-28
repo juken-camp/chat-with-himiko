@@ -382,7 +382,7 @@ function renderMessages(){
 }
 
 // ★ APIキーを使わず /api/chat（Vercel Serverless Function）に送信 ★
-const SUGGESTION_SUFFIX = `\n\n【重要な追加指示】回答の最後に、ユーザーが次に聞きそうな質問候補を3つ提案してください。以下の形式で回答本文の後に必ず付けてください：\n[SUGGESTIONS]質問1|質問2|質問3[/SUGGESTIONS]\n候補は短く（30文字以内）、会話の流れに自然につながるものにしてください。必ず「〜なの？」「〜って何？」「〜はどうなの？」「〜を教えて」のような丁寧すぎない敬体（です・ます調ベースのカジュアル敬語）で統一してください。例：「元寇の後の幕府はどうなったの？」「御恩と奉公って何なの？」`;
+const SUGGESTION_SUFFIX = `\n\n【重要な追加指示】回答の最後に、ユーザーが次に聞きそうな質問候補を3つ提案してください。以下の形式で回答本文の後に必ず付けてください：\n[SUGGESTIONS]質問1|質問2|質問3[/SUGGESTIONS]\n⚠️ 各候補は必ず「完全な質問文」にしてください（単語やフレーズの断片はNG）。8〜30文字程度で、末尾は必ず「？」で終わること。「〜なの？」「〜って何？」「〜はどうなの？」「〜を教えて？」のようなカジュアル敬語で統一。例：「元寇の後の幕府はどうなったの？」「御恩と奉公って何なの？」`;
 
 const SUGGESTION_REMINDER = `\n(※必ず回答の最後に [SUGGESTIONS]質問1|質問2|質問3[/SUGGESTIONS] の形式で次の質問候補3つを付けてください)`;
 
@@ -392,7 +392,12 @@ function parseSuggestions(text){
     const raw=match[1].trim();
     const suggestions=raw.split(/\||\n|・|①|②|③|１|２|３|1\.|2\.|3\./)
       .map(s=>s.trim().replace(/^[\d\.\)\-\s]+/,""))
-      .filter(s=>s.length>0&&s.length<60);
+      .filter(s=>{
+        if(s.length<8||s.length>60) return false;
+        if(/[？\?]$/.test(s)) return true;
+        if(/(?:教えて|聞きたい|知りたい|してみて|だろう|かな)$/.test(s)) return true;
+        return false;
+      });
     const cleanText=text.replace(/\[SUGGESTIONS\].*?\[\/SUGGESTIONS\]/s,"").trim();
     return{text:cleanText,suggestions:suggestions.slice(0,3)};
   }
