@@ -48,7 +48,8 @@
     .suggestions{margin-bottom:12px}
     .suggestions-label{font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:7px}
     .suggestions-list{display:flex;flex-wrap:wrap;gap:6px}
-    .suggestion-btn{background:#fff;border-radius:100px;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;transition:background 0.2s}
+    .suggestion-btn{background:#fff;border-radius:100px;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;transition:background 0.2s,opacity 0.2s}
+    @media(hover:hover){.suggestion-btn:hover{opacity:0.75}}
     .bubble-row{display:flex;margin-bottom:11px;gap:8px;align-items:flex-end;animation:fadeUp 0.3s}
     .bubble-row.user{justify-content:flex-end}
     .bubble-avatar{width:33px;height:33px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
@@ -306,7 +307,7 @@ function renderCards(){
 let listScrollY=0;
 
 function openChat(id){
-  listScrollY=window.scrollY||document.documentElement.scrollTop;
+  listScrollY=window.scrollY||document.documentElement.scrollTop||document.body.scrollTop||0;
   currentChar=id===0?AI_SENSEI:CHARACTERS.find(c=>c.id===id);
   messages=[{role:"assistant",content:currentChar.greeting}];
   const ch=currentChar,ai=ch.isSpecial;
@@ -330,11 +331,11 @@ function showList(){
   document.getElementById("chat-view").classList.add("hidden");
   document.getElementById("list-view").classList.remove("hidden");
   currentChar=null;messages=[];dynamicSuggestions=[];
-  requestAnimationFrame(()=>{
-    requestAnimationFrame(()=>{
-      window.scrollTo(0,listScrollY);
-    });
-  });
+  setTimeout(()=>{
+    window.scrollTo(0,listScrollY);
+    document.body.scrollTop=listScrollY;
+    document.documentElement.scrollTop=listScrollY;
+  },50);
 }
 
 function renderMessages(){
@@ -352,7 +353,7 @@ function renderMessages(){
     html+=`<div class="suggestions">
       <div class="suggestions-label">💡 こんな質問をしてみよう</div>
       <div class="suggestions-list">
-        ${ch.qs.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}" onmouseover="this.style.background='${ch.color}10'" onmouseout="this.style.background='#fff'">${esc(q)}</button>`).join("")}
+        ${ch.qs.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}">${esc(q)}</button>`).join("")}
       </div>
     </div>`;
   }
@@ -362,7 +363,7 @@ function renderMessages(){
     html+=`<div class="suggestions">
       <div class="suggestions-label">💬 さらに聞いてみよう</div>
       <div class="suggestions-list" style="flex-direction:column;align-items:flex-start">
-        ${dynamicSuggestions.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}" onmouseover="this.style.background='${ch.color}10'" onmouseout="this.style.background='#fff'">${esc(q)}</button>`).join("")}
+        ${dynamicSuggestions.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}">${esc(q)}</button>`).join("")}
       </div>
     </div>`;
   }
