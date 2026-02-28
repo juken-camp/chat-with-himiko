@@ -360,8 +360,8 @@ function renderMessages(){
   if(!isLoading&&dynamicSuggestions.length>0&&messages.length>1){
     html+=`<div class="suggestions">
       <div class="suggestions-label">💬 さらに聞いてみよう</div>
-      <div class="suggestions-list">
-        ${dynamicSuggestions.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}" onmouseover="this.style.background='${ch.color}10'" onmouseout="this.style.background='#fff'">${esc(q)}</button>`).join("")}
+      <div class="suggestions-list" style="flex-direction:column">
+        ${dynamicSuggestions.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color};width:100%;text-align:left" data-suggestion="${esc(q)}" onmouseover="this.style.background='${ch.color}10'" onmouseout="this.style.background='#fff'">${esc(q)}</button>`).join("")}
       </div>
     </div>`;
   }
@@ -387,9 +387,12 @@ const SUGGESTION_REMINDER = `\n(※必ず回答の最後に [SUGGESTIONS]質問1
 function parseSuggestions(text){
   const match=text.match(/\[SUGGESTIONS\](.*?)\[\/SUGGESTIONS\]/s);
   if(match){
-    const suggestions=match[1].split("|").map(s=>s.trim()).filter(s=>s.length>0&&s.length<60);
+    const raw=match[1].trim();
+    const suggestions=raw.split(/\||\n|・|①|②|③|１|２|３|1\.|2\.|3\./)
+      .map(s=>s.trim().replace(/^[\d\.\)\-\s]+/,""))
+      .filter(s=>s.length>0&&s.length<60);
     const cleanText=text.replace(/\[SUGGESTIONS\].*?\[\/SUGGESTIONS\]/s,"").trim();
-    return{text:cleanText,suggestions};
+    return{text:cleanText,suggestions:suggestions.slice(0,3)};
   }
   return{text,suggestions:[]};
 }
