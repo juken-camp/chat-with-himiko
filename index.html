@@ -119,8 +119,14 @@
       </div>
     </div>
     <div id="online-badge" class="hidden online-badge">🟢 オンライン</div>
-    <div id="explainer-badge" class="hidden explainer-badge">📖 解説モード（⚠️ 歴史的教訓）</div>
-    <div id="narrator-badge" class="hidden narrator-badge">📖 解説モード（🕊️ 敬意配慮）</div>
+    <div id="explainer-badge" class="hidden" style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
+      <span class="explainer-badge">📖 解説モード</span>
+      <span class="explainer-badge" style="background:#fef3c7;color:#92400e;border-color:#fde68a">⚠️ 歴史的教訓</span>
+    </div>
+    <div id="narrator-badge" class="hidden" style="display:flex;flex-direction:column;gap:3px;flex-shrink:0">
+      <span class="narrator-badge">📖 解説モード</span>
+      <span class="narrator-badge" style="background:#dcfce7;color:#166534;border-color:#bbf7d0">🕊️ 敬意配慮</span>
+    </div>
   </div>
   <div class="messages" id="messages"></div>
   <div class="input-area">
