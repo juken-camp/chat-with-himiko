@@ -382,6 +382,8 @@ function renderMessages(){
 // ★ APIキーを使わず /api/chat（Vercel Serverless Function）に送信 ★
 const SUGGESTION_SUFFIX = `\n\n【重要な追加指示】回答の最後に、ユーザーが次に聞きそうな質問候補を3つ提案してください。以下の形式で回答本文の後に必ず付けてください：\n[SUGGESTIONS]質問1|質問2|質問3[/SUGGESTIONS]\n候補は短く（30文字以内）、会話の流れに自然につながるものにしてください。必ず「〜なの？」「〜って何？」「〜はどうなの？」「〜を教えて」のような丁寧すぎない敬体（です・ます調ベースのカジュアル敬語）で統一してください。例：「元寇の後の幕府はどうなったの？」「御恩と奉公って何なの？」`;
 
+const SUGGESTION_REMINDER = `\n(※必ず回答の最後に [SUGGESTIONS]質問1|質問2|質問3[/SUGGESTIONS] の形式で次の質問候補3つを付けてください)`;
+
 function parseSuggestions(text){
   const match=text.match(/\[SUGGESTIONS\](.*?)\[\/SUGGESTIONS\]/s);
   if(match){
@@ -392,6 +394,12 @@ function parseSuggestions(text){
   return{text,suggestions:[]};
 }
 
+function getFallbackSuggestions(ch){
+  if(!ch) return [];
+  if(ch.isSpecial) return ["入試に出やすい時代はどこ？","年号の覚え方のコツある？","歴史の流れをつかむ方法を教えて"];
+  return ["もう少し詳しく教えて","入試ではどう出題されるの？","他の人物との関係を教えて"];
+}
+
 async function sendMessage(text){
   if(!text||!text.trim()||isLoading||!currentChar)return;
   messages.push({role:"user",content:text.trim()});
@@ -399,12 +407,18 @@ async function sendMessage(text){
   dynamicSuggestions=[];
   isLoading=true;renderMessages();
   try{
+    const apiMessages=messages.map((m,i)=>{
+      if(m.role==="user"&&i===messages.length-1){
+        return{role:m.role,content:m.content+SUGGESTION_REMINDER};
+      }
+      return{role:m.role,content:m.content};
+    });
     const res=await fetch("/api/chat",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({
         system: currentChar.prompt + SUGGESTION_SUFFIX,
-        messages: messages.map(m=>({role:m.role,content:m.content}))
+        messages: apiMessages
       })
     });
     if(!res.ok){
@@ -415,7 +429,7 @@ async function sendMessage(text){
     const rawReply=data.content?.filter(b=>b.type==="text").map(b=>b.text).join("")||"……";
     const parsed=parseSuggestions(rawReply);
     messages.push({role:"assistant",content:parsed.text});
-    dynamicSuggestions=parsed.suggestions;
+    dynamicSuggestions=parsed.suggestions.length>0?parsed.suggestions:getFallbackSuggestions(currentChar);
   }catch(e){
     messages.push({role:"assistant",content:`⚠️ 接続エラーが発生しました。(${e.message}) もう一度お試しください。`});
     dynamicSuggestions=[];
