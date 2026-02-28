@@ -357,7 +357,8 @@ function renderMessages(){
     </div>`;
   }
 
-  if(!isLoading&&dynamicSuggestions.length>0&&messages.length>1){
+  const lastMsg=messages.length>0?messages[messages.length-1]:null;
+  if(!isLoading&&dynamicSuggestions.length>0&&messages.length>1&&lastMsg&&lastMsg.role==="assistant"){
     html+=`<div class="suggestions">
       <div class="suggestions-label">💬 さらに聞いてみよう</div>
       <div class="suggestions-list" style="flex-direction:column;align-items:flex-start">
@@ -441,7 +442,7 @@ async function sendMessage(text){
   }
 }
 
-function handleSend(){sendMessage(document.getElementById("msg-input").value);}
+function handleSend(){dynamicSuggestions=[];sendMessage(document.getElementById("msg-input").value);}
 
 function updateSendBtn(){
   const btn=document.getElementById("send-btn"),val=document.getElementById("msg-input").value.trim();
