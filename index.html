@@ -297,7 +297,7 @@ function renderCards(){
             ${ch.isNarrator?`<span class="narrator-badge">📖 解説モード</span>`:""}
           </div>
           <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;display:flex;align-items:center;gap:5px">${esc(ch.period)}${!ai?(function(){const e=getEra(ch.period);return '<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:'+e.bg+';color:'+e.color+';font-weight:800">'+e.label+'</span>';})():""}</div>
-          <div style="font-size:12px;font-weight:700;color:${ch.color};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ai?"💬 ":"💡 "}${esc(ch.catchphrase)}</div>
+          <div style="font-size:12px;font-weight:700;color:${ch.color};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ai?"💬 ":""}${esc(ch.catchphrase)}</div>
         </div>
       </div>
     </button>`;
