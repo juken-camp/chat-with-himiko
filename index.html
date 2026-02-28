@@ -360,8 +360,8 @@ function renderMessages(){
   if(!isLoading&&dynamicSuggestions.length>0&&messages.length>1){
     html+=`<div class="suggestions">
       <div class="suggestions-label">💬 さらに聞いてみよう</div>
-      <div class="suggestions-list" style="flex-direction:column">
-        ${dynamicSuggestions.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color};width:100%;text-align:left" data-suggestion="${esc(q)}" onmouseover="this.style.background='${ch.color}10'" onmouseout="this.style.background='#fff'">${esc(q)}</button>`).join("")}
+      <div class="suggestions-list" style="flex-direction:column;align-items:flex-start">
+        ${dynamicSuggestions.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}" onmouseover="this.style.background='${ch.color}10'" onmouseout="this.style.background='#fff'">${esc(q)}</button>`).join("")}
       </div>
     </div>`;
   }
@@ -495,7 +495,7 @@ renderTags();renderCards();
 
 document.getElementById("messages").addEventListener("click",function(e){
   const btn=e.target.closest(".suggestion-btn");
-  if(btn&&btn.dataset.suggestion){sendMessage(btn.dataset.suggestion);}
+  if(btn&&btn.dataset.suggestion){dynamicSuggestions=[];sendMessage(btn.dataset.suggestion);}
 });
 </script>
 </body>
