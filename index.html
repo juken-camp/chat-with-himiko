@@ -302,7 +302,6 @@ function renderCards(){
         <div class="card-info">
           <div class="card-name-row">
             <span style="font-size:16px;font-weight:900;color:#1e293b">${esc(ch.name)}</span>
-            <span class="card-tag" style="background:${ch.tagColor||ch.color}18;color:${ch.tagColor||ch.color}">${ai?"AI先生":ch.tag}</span>
             ${!ai?(function(){const e=getEra(ch.period);return '<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:'+e.bg+';color:'+e.color+';font-weight:800">'+e.label+'</span>';})():""}
             ${ai?`<span class="online-badge">オンライン</span>`:""}
           </div>
