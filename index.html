@@ -303,9 +303,10 @@ function renderCards(){
           <div class="card-name-row">
             <span style="font-size:16px;font-weight:900;color:#1e293b">${esc(ch.name)}</span>
             <span class="card-tag" style="background:${ch.tagColor||ch.color}18;color:${ch.tagColor||ch.color}">${ai?"AI先生":ch.tag}</span>
+            ${!ai?(function(){const e=getEra(ch.period);return '<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:'+e.bg+';color:'+e.color+';font-weight:800">'+e.label+'</span>';})():""}
             ${ai?`<span class="online-badge">オンライン</span>`:""}
           </div>
-          <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;display:flex;align-items:center;gap:5px">${esc(ch.period)}${!ai?(function(){const e=getEra(ch.period);return '<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:'+e.bg+';color:'+e.color+';font-weight:800">'+e.label+'</span>';})():""}${hasNarrator?`<span class="narrator-badge">📖 解説</span>`:""}</div>
+          <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;display:flex;align-items:center;gap:5px">${esc(ch.period)}${hasNarrator?`<span class="narrator-badge">📖 解説</span>`:""}</div>
           <div style="font-size:12px;font-weight:700;color:${ch.color};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ai?"💬 ":""}${esc(ch.catchphrase)}</div>
         </div>
         <span class="fav-btn${faved?" faved":""}" onclick="toggleFav(${ch.id},event)" title="お気に入り">${faved?"★":"☆"}</span>
