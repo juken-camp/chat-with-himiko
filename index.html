@@ -26,7 +26,7 @@
     .tag-bar{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 0}
     .tag-btn{flex:0 0 auto;padding:8px 16px;border-radius:100px;border:2px solid #e2e8f0;background:#fff;color:#64748b;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap;transition:all 0.2s}
     .tag-btn.active{border-color:#6366f1;background:#6366f1;color:#fff}
-    .fav-btn{margin-left:auto;font-size:18px;color:#cbd5e1;cursor:pointer;transition:all 0.2s;line-height:1;padding:2px 4px;flex-shrink:0}
+    .fav-btn{font-size:20px;color:#cbd5e1;cursor:pointer;transition:all 0.2s;line-height:1;padding:4px;flex-shrink:0;align-self:center}
     .fav-btn.faved{color:#f59e0b}
     @media(hover:hover){.fav-btn:hover{color:#f59e0b;transform:scale(1.2)}}
     .card-list{display:flex;flex-direction:column;gap:9px}
@@ -293,6 +293,7 @@ function renderCards(){
     const faved=isFav(ch.id);
     const bdr=ai?`border-color:${ch.color}80;box-shadow:0 4px 18px ${ch.color}25`:"";
     const anim=ai?`animation:float 3s ease-in-out infinite`:"";
+    const hasNarrator=ch.isExplainer||ch.isNarrator;
     return`<button class="char-card" onclick="openChat(${ch.id})" style="animation-delay:${Math.min(i*0.03,0.4)}s;${bdr}">
       <div class="card-inner">
         <div class="avatar" style="background:linear-gradient(135deg,${ch.color},${ch.accent});${anim}">
@@ -303,13 +304,11 @@ function renderCards(){
             <span style="font-size:16px;font-weight:900;color:#1e293b">${esc(ch.name)}</span>
             <span class="card-tag" style="background:${ch.tagColor||ch.color}18;color:${ch.tagColor||ch.color}">${ai?"AI先生":ch.tag}</span>
             ${ai?`<span class="online-badge">オンライン</span>`:""}
-            ${ch.isExplainer?`<span class="explainer-badge">📖 解説モード</span>`:""}
-            ${ch.isNarrator?`<span class="narrator-badge">📖 解説モード</span>`:""}
-            <span class="fav-btn${faved?" faved":""}" onclick="toggleFav(${ch.id},event)" title="お気に入り">${faved?"★":"☆"}</span>
           </div>
-          <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;display:flex;align-items:center;gap:5px">${esc(ch.period)}${!ai?(function(){const e=getEra(ch.period);return '<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:'+e.bg+';color:'+e.color+';font-weight:800">'+e.label+'</span>';})():""}</div>
+          <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;display:flex;align-items:center;gap:5px">${esc(ch.period)}${!ai?(function(){const e=getEra(ch.period);return '<span style="font-size:9px;padding:1px 6px;border-radius:100px;background:'+e.bg+';color:'+e.color+';font-weight:800">'+e.label+'</span>';})():""}${hasNarrator?`<span class="narrator-badge">📖 解説</span>`:""}</div>
           <div style="font-size:12px;font-weight:700;color:${ch.color};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${ai?"💬 ":""}${esc(ch.catchphrase)}</div>
         </div>
+        <span class="fav-btn${faved?" faved":""}" onclick="toggleFav(${ch.id},event)" title="お気に入り">${faved?"★":"☆"}</span>
       </div>
     </button>`;
   }).join("");
