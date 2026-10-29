@@ -46,23 +46,37 @@
     .back-btn{background:none;border:none;padding:4px 8px 4px 0;color:#94a3b8;cursor:pointer;font-size:20px;font-weight:700;line-height:1;flex-shrink:0;transition:color 0.15s}
     .back-btn:active{color:#6366f1}
     .chat-avatar{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-    .messages{flex:1;overflow-y:scroll;padding:14px 12px;-webkit-overflow-scrolling:touch;background:#f0f4ff;}
-    .messages-inner{min-height:calc(100% + 1px);}
+    .messages{flex:1;min-height:0;overflow-y:auto;padding:14px 12px 22px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#f0f4ff;}
+    .messages-inner{min-height:100%;max-width:700px;margin:0 auto;}
     .bio-card{background:#fff;border-radius:16px;padding:13px 15px;margin-bottom:12px;animation:fadeUp 0.4s}
     .bio-inner{display:flex;gap:10px;align-items:flex-start}
-    .suggestions{margin-bottom:12px}
-    .suggestions-label{font-size:11px;color:#94a3b8;font-weight:700;margin-bottom:7px}
-    .suggestions-list{display:flex;flex-wrap:wrap;gap:6px}
-    .suggestion-btn{background:#fff;border-radius:100px;padding:7px 13px;font-size:12px;font-weight:700;cursor:pointer;transition:background 0.2s,opacity 0.2s;text-align:left}
-    @media(hover:hover){.suggestion-btn:hover{opacity:0.75}}
-    .bubble-row{display:flex;margin-bottom:11px;gap:8px;align-items:flex-end;animation:fadeUp 0.3s}
-    .bubble-row.user{justify-content:flex-end}
-    .bubble-avatar{width:33px;height:33px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-    .bubble{max-width:79%;padding:11px 15px;font-size:14px;line-height:1.8;font-weight:500;white-space:pre-wrap}
-    .bubble.user{border-radius:18px 18px 4px 18px;color:#fff}
-    .bubble.assistant{border-radius:18px 18px 18px 4px;background:#fff;color:#1e293b;box-shadow:0 2px 8px rgba(0,0,0,0.06)}
-    .typing{padding:12px 16px;border-radius:18px 18px 18px 4px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;gap:5px;align-items:center}
-    .typing-dot{width:7px;height:7px;border-radius:50%}
+    /* 質問候補は送信メッセージと同じ右側に配置 */
+    .suggestions{display:flex;flex-direction:column;align-items:flex-end;gap:7px;margin:14px 0 18px 38px;animation:messageArrive .32s ease-out both;}
+    .suggestions-label{font-size:11px;color:#64748b;font-weight:700;text-align:right;}
+    .suggestions-list{display:flex;flex-direction:column;align-items:flex-end;width:100%;gap:8px;}
+    .suggestion-btn{display:block;width:fit-content;max-width:94%;min-height:40px;background:#fff;border-radius:16px 16px 5px 16px;padding:9px 13px;font-size:12px;line-height:1.7;font-weight:700;cursor:pointer;transition:transform .13s,background-color .13s,box-shadow .13s;text-align:left;overflow-wrap:anywhere;touch-action:manipulation;box-shadow:0 2px 6px rgba(0,0,0,.035);}
+    .suggestion-btn:active{transform:translateY(1px) scale(.98);background:#f8fafc;box-shadow:none;}
+    .suggestion-btn:focus-visible,.reveal-skip:focus-visible{outline:2px solid #4f46e5;outline-offset:3px;}
+    @media(hover:hover){.suggestion-btn:hover{background:#f8fafc;}}
+    .bubble-group{margin-bottom:14px;}
+    .bubble-row{display:flex;margin-bottom:10px;gap:8px;align-items:flex-end;}
+    .bubble-row.user{justify-content:flex-end;margin-bottom:15px;}
+    .bubble-row.is-new{animation:messageArrive .36s cubic-bezier(.2,.75,.2,1) both;}
+    .bubble-row.continuation{margin-top:-3px;}
+    .bubble-avatar,.bubble-avatar-spacer{width:33px;min-width:33px;height:33px;flex-shrink:0;}
+    .bubble-avatar{border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;}
+    .bubble{max-width:82%;padding:11px 15px;font-size:14px;line-height:1.85;font-weight:500;white-space:pre-wrap;overflow-wrap:anywhere;}
+    .bubble.user{border-radius:18px 18px 4px 18px;color:#fff;}
+    .bubble.assistant{border-radius:18px 18px 18px 4px;background:#fff;color:#1e293b;box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+    .typing{padding:12px 16px;border-radius:18px 18px 18px 4px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,0.06);display:flex;gap:5px;align-items:center;min-height:40px;}
+    .typing-dot{width:7px;height:7px;border-radius:50%;animation:himikoTyping 1.1s ease-in-out infinite;}
+    .reveal-status{display:flex;align-items:center;justify-content:space-between;gap:10px;max-width:82%;margin:1px 0 12px 41px;}
+    .reveal-dots{display:flex;align-items:center;gap:5px;padding:8px 9px;min-height:36px;}
+    .reveal-skip{border:1px solid #cbd5e1;background:#fff;color:#475569;padding:7px 11px;border-radius:999px;font:700 11px 'M PLUS Rounded 1c',sans-serif;cursor:pointer;white-space:nowrap;min-height:36px;}
+    .reveal-skip:active{transform:scale(.97);}
+    @keyframes messageArrive{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes himikoTyping{0%,60%,100%{transform:translateY(0);opacity:.45}30%{transform:translateY(-5px);opacity:1}}
+    @media(prefers-reduced-motion:reduce){.bubble-row.is-new,.suggestions,.typing-dot{animation:none!important}.suggestion-btn,.reveal-skip{transition:none!important}}
     .error-msg{text-align:center;padding:9px 14px;background:#fef2f2;border:2px solid #fecaca;border-radius:12px;color:#ef4444;font-size:12px;font-weight:700;margin-bottom:11px}
     .input-inner{display:flex;gap:8px;max-width:640px;margin:0 auto;align-items:flex-end}
     #msg-input{flex:1;background:#f8fafc;border:2px solid #e2e8f0;border-radius:13px;padding:11px 15px;font-size:14px;line-height:1.6;font-family:inherit;color:#1e293b;transition:border-color 0.2s}
@@ -256,8 +270,10 @@ const CHARACTERS = [
 const TAGS=[{id:"all",label:"すべて",emoji:"📋"},{id:"fav",label:"お気に入り",emoji:"⭐"},{id:"special",label:"AI先生",emoji:"🤖"},{id:"日本史",label:"日本史",emoji:"🏯"},{id:"世界史",label:"世界史",emoji:"🌍"},{id:"古代",label:"古代",emoji:"🏺"},{id:"中世",label:"中世",emoji:"⚔️"},{id:"近世",label:"近世",emoji:"🏯"},{id:"近代",label:"近代",emoji:"🚂"},{id:"現代",label:"現代",emoji:"🌐"},{id:"kaisetsu",label:"解説モード",emoji:"📖"},{id:"explainer",label:"歴史的教訓",emoji:"⚠️"},{id:"narrator",label:"敬意配慮",emoji:"🕊️"}];
 const allChars=[AI_SENSEI,...CHARACTERS];
 let currentTag="all",currentChar=null,messages=[],isLoading=false,dynamicSuggestions=[];
+let chatEpoch=0,activeReveal=null,userReadingHistory=false,previousChatScroll=0;
 
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\n/g,"<br>")}
+function escAttr(s){return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/'/g,"&#39;")}
 
 
 function getEra(period) {
@@ -322,6 +338,7 @@ function renderCards(){
 let listScrollY=0;
 
 function openChat(id){
+  chatEpoch++;cancelReveal(false);isLoading=false;dynamicSuggestions=[];
   listScrollY=window.scrollY||document.documentElement.scrollTop||document.body.scrollTop||0;
   currentChar=id===0?AI_SENSEI:CHARACTERS.find(c=>c.id===id);
   messages=[{role:"assistant",content:currentChar.greeting}];
@@ -338,11 +355,13 @@ function openChat(id){
   document.getElementById("msg-input").placeholder=ai?"AI先生に質問しよう！":(ch.isExplainer||ch.isNarrator)?`${ch.name}について質問しよう！`:`${ch.name}に質問してみよう！`;
   document.getElementById("list-view").classList.add("hidden");
   document.getElementById("chat-view").classList.remove("hidden");
+  document.getElementById("msg-input").value="";
   renderMessages();
-  setTimeout(()=>document.getElementById("msg-input").focus(),100);
+  // スマートフォンでキーボードが突然開いて画面が飛ぶのを防ぐ。
 }
 
 function showList(){
+  chatEpoch++;cancelReveal(false);isLoading=false;
   document.getElementById("chat-view").classList.add("hidden");
   document.getElementById("list-view").classList.remove("hidden");
   currentChar=null;messages=[];dynamicSuggestions=[];
@@ -353,47 +372,135 @@ function showList(){
   },50);
 }
 
-function renderMessages(){
-  const ch=currentChar;
-  let html=``;
-
-  html+=messages.map(m=>{
-    const u=m.role==="user";
-    return u
-      ?`<div class="bubble-row user"><div class="bubble user" style="background:linear-gradient(135deg,${ch.color},${ch.accent});box-shadow:0 3px 10px ${ch.color}40">${esc(m.content)}</div></div>`
-      :`<div class="bubble-row assistant"><div class="bubble-avatar" style="background:linear-gradient(135deg,${ch.color},${ch.accent})">${ch.emoji}</div><div class="bubble assistant">${esc(m.content)}</div></div>`;
-  }).join("");
-
-  if(messages.length<=1&&ch.qs&&!isLoading){
-    html+=`<div class="suggestions">
-      <div class="suggestions-label">💡 こんな質問をしてみよう</div>
-      <div class="suggestions-list">
-        ${ch.qs.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}">${esc(q)}</button>`).join("")}
-      </div>
-    </div>`;
-  }
-
-  const lastMsg=messages.length>0?messages[messages.length-1]:null;
-  if(!isLoading&&dynamicSuggestions.length>0&&messages.length>1&&lastMsg&&lastMsg.role==="assistant"){
-    html+=`<div class="suggestions">
-      <div class="suggestions-label">💬 さらに聞いてみよう</div>
-      <div class="suggestions-list" style="flex-direction:column;align-items:flex-start">
-        ${dynamicSuggestions.map(q=>`<button class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${esc(q)}">${esc(q)}</button>`).join("")}
-      </div>
-    </div>`;
-  }
-
-  if(isLoading){
-    html+=`<div class="bubble-row assistant">
-      <div class="bubble-avatar" style="background:linear-gradient(135deg,${ch.color},${ch.accent})">${ch.emoji}</div>
-      <div class="typing">${[0,.2,.4].map(d=>`<div class="typing-dot" style="background:${ch.color};animation:dot 1.2s ${d}s ease-in-out infinite"></div>`).join("")}</div>
-    </div>`;
-  }
-
+// 会話を毎回全再描画するとスクロール位置が飛ぶため、新規メッセージはDOMへ追加する。
+function messageInner(){return document.querySelector("#messages .messages-inner");}
+function nodeFromHTML(html){const t=document.createElement("template");t.innerHTML=html.trim();return t.content.firstElementChild;}
+function nearChatBottom(tolerance=125){
   const el=document.getElementById("messages");
-  el.innerHTML=`<div class="messages-inner">${html}</div>`;
-  el.scrollTop=el.scrollHeight;
+  return el.scrollHeight-el.scrollTop-el.clientHeight<tolerance;
+}
+function scrollChatToEnd(smooth=true){
+  const el=document.getElementById("messages"),epoch=chatEpoch;
+  if(userReadingHistory)return;
+  requestAnimationFrame(()=>{
+    if(userReadingHistory||epoch!==chatEpoch||!el.isConnected||document.getElementById("chat-view").classList.contains("hidden"))return;
+    el.scrollTo({top:el.scrollHeight,behavior:smooth&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches?"smooth":"auto"});
+  });
+}
+function appendChatNode(node,follow=false){
+  const inner=messageInner();if(!inner)return;
+  inner.append(node);
+  if(follow)scrollChatToEnd(true);
+}
+function assistantRowHTML(ch,text,first=true,animate=false){
+  return `<div class="bubble-row assistant${first?"":" continuation"}${animate?" is-new":""}">
+    ${first?`<div class="bubble-avatar" style="background:linear-gradient(135deg,${ch.color},${ch.accent})">${ch.emoji}</div>`:`<div class="bubble-avatar-spacer" aria-hidden="true"></div>`}
+    <div class="bubble assistant">${esc(text)}</div></div>`;
+}
+function userRowHTML(ch,text,animate=false){
+  return `<div class="bubble-row user${animate?" is-new":""}"><div class="bubble user" style="background:linear-gradient(135deg,${ch.color},${ch.accent});box-shadow:0 3px 10px ${ch.color}40">${esc(text)}</div></div>`;
+}
+function suggestionHTML(ch,questions,initial=false){
+  if(!questions.length)return "";
+  return `<div class="suggestions" aria-label="次の質問候補">
+    <div class="suggestions-label">${initial?"💡 こんな質問をしてみよう":"💬 さらに聞いてみよう"}</div>
+    <div class="suggestions-list">${questions.map(q=>`<button type="button" class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${escAttr(q)}">${esc(q)}</button>`).join("")}</div>
+  </div>`;
+}
+function typingHTML(ch){
+  return `<div class="bubble-row assistant typing-row" role="status" aria-label="回答を作成しています">
+    <div class="bubble-avatar" style="background:linear-gradient(135deg,${ch.color},${ch.accent})">${ch.emoji}</div>
+    <div class="typing">${[0,.2,.4].map(d=>`<span class="typing-dot" style="background:${ch.color};animation-delay:${d}s"></span>`).join("")}</div>
+  </div>`;
+}
+function renderMessages(){
+  const ch=currentChar;if(!ch)return;
+  const markup=messages.map(m=>m.role==="user"?userRowHTML(ch,m.content):`<div class="bubble-group">${assistantRowHTML(ch,m.content)}</div>`).join("");
+  const initial=messages.length<=1?ch.qs||[]:[];
+  const followups=messages.length>1&&messages.at(-1)?.role==="assistant"?dynamicSuggestions:[];
+  const el=document.getElementById("messages");
+  el.innerHTML=`<div class="messages-inner">${markup}${suggestionHTML(ch,initial,true)}${suggestionHTML(ch,followups)}</div>`;
+  el.scrollTop=0;
+  previousChatScroll=0;userReadingHistory=false;
   updateSendBtn();
+}
+
+// 日本語の文末や段落を基準に分割。APIの回答自体はそのまま会話履歴に保持する。
+function splitReplyBubbles(text){
+  const source=String(text||"").replace(/\r\n?/g,"\n").trim();
+  if(!source)return ["……"];
+  const paragraphs=source.split(/\n\s*\n/).map(x=>x.trim()).filter(Boolean);
+  const pieces=[];
+  for(const paragraph of paragraphs){
+    const sentences=paragraph.match(/[^。！？!?]+[。！？!?]+[」』）】]?|[^。！？!?]+$/g)||[paragraph];
+    for(let sentence of sentences){
+      sentence=sentence.trim();if(!sentence)continue;
+      while(sentence.length>120){
+        const look=sentence.slice(0,107);
+        let cut=Math.max(look.lastIndexOf("、"),look.lastIndexOf("，"),look.lastIndexOf("\n"),look.lastIndexOf(" "));
+        if(cut<50)cut=95;else cut+=1;
+        pieces.push(sentence.slice(0,cut).trim());sentence=sentence.slice(cut).trim();
+      }
+      if(sentence)pieces.push(sentence);
+    }
+    pieces.push(null); // 段落の境界でバブルを切る
+  }
+  const chunks=[];let current="";
+  for(const piece of pieces){
+    if(piece===null){if(current){chunks.push(current);current="";}continue;}
+    if(current&&current.length+piece.length>100){chunks.push(current);current=piece;}
+    else current+=piece;
+  }
+  if(current)chunks.push(current);
+  return chunks.length?chunks:[source];
+}
+function makeRevealStatus(ch){
+  return nodeFromHTML(`<div class="reveal-status" role="status" aria-label="続きの吹き出しを順番に表示しています">
+    <div class="reveal-dots">${[0,.2,.4].map(d=>`<span class="typing-dot" style="background:${ch.color};animation-delay:${d}s"></span>`).join("")}</div>
+    <button type="button" class="reveal-skip">すべて表示</button>
+  </div>`);
+}
+// 1回のAPI応答を一定間隔で表示。ユーザーが上へスクロール中なら勝手に追従しない。
+function startReveal(ch,reply,suggestions){
+  cancelReveal(false);
+  const chunks=splitReplyBubbles(reply);
+  const group=nodeFromHTML('<div class="bubble-group"></div>');
+  const follow=nearChatBottom(160);
+  appendChatNode(group,false);
+  const state={group,ch,chunks,suggestions,index:0,timer:null,status:null};
+  activeReveal=state;
+  const addNext=()=>{
+    if(activeReveal!==state||currentChar!==ch)return;
+    const shouldFollow=nearChatBottom(160);
+    state.status?.remove();state.status=null;
+    const part=state.chunks[state.index];
+    group.append(nodeFromHTML(assistantRowHTML(ch,part,state.index===0,true)));
+    state.index++;
+    if(state.index<state.chunks.length){
+      state.status=makeRevealStatus(ch);
+      group.append(state.status);
+      const readingTime=Math.max(2600,Math.min(5000,part.length*48));
+      state.timer=setTimeout(addNext,readingTime);
+    }else{
+      activeReveal=null;
+      if(suggestions.length)appendChatNode(nodeFromHTML(suggestionHTML(ch,suggestions)),false);
+    }
+    if(shouldFollow)scrollChatToEnd(true);
+  };
+  addNext();
+  if(follow)scrollChatToEnd(true);
+}
+function cancelReveal(showRest=false,showQuestions=false){
+  const state=activeReveal;if(!state)return;
+  clearTimeout(state.timer);activeReveal=null;
+  state.status?.remove();
+  if(showRest){
+    while(state.index<state.chunks.length){
+      state.group.append(nodeFromHTML(assistantRowHTML(state.ch,state.chunks[state.index],state.index===0,false)));
+      state.index++;
+    }
+    if(showQuestions&&state.suggestions.length)appendChatNode(nodeFromHTML(suggestionHTML(state.ch,state.suggestions)),false);
+  }
 }
 
 // ★ APIキーを使わず /api/chat（Vercel Serverless Function）に送信 ★
@@ -478,10 +585,19 @@ function playReceiveSound(){
 
 async function sendMessage(text){
   if(!text||!text.trim()||isLoading||!currentChar)return;
-  messages.push({role:"user",content:text.trim()});
+  cancelReveal(true,false);
+  const ch=currentChar,epoch=chatEpoch,question=text.trim();
+  messageInner()?.querySelectorAll(".suggestions").forEach(n=>n.remove());
+  messages.push({role:"user",content:question});
   document.getElementById("msg-input").value="";
   dynamicSuggestions=[];
-  isLoading=true;renderMessages();
+  isLoading=true;
+  userReadingHistory=false; // 自分が送信したときは最新メッセージへ戻す
+  const userRow=nodeFromHTML(userRowHTML(ch,question,true));
+  const typingRow=nodeFromHTML(typingHTML(ch));
+  appendChatNode(userRow,false);
+  appendChatNode(typingRow,true);
+  updateSendBtn();
   playSendSound();
   try{
     const apiMessages=messages.map((m,i)=>{
@@ -493,26 +609,30 @@ async function sendMessage(text){
     const res=await fetch("/api/chat",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        system: currentChar.prompt + SUGGESTION_SUFFIX,
-        messages: apiMessages
-      })
+      body:JSON.stringify({system:ch.prompt+SUGGESTION_SUFFIX,messages:apiMessages})
     });
     if(!res.ok){
       const err=await res.json().catch(()=>({}));
       throw new Error(err.error||res.status);
     }
     const data=await res.json();
+    if(epoch!==chatEpoch||currentChar!==ch)return;
     const rawReply=data.content?.filter(b=>b.type==="text").map(b=>b.text).join("")||"……";
     const parsed=parseSuggestions(rawReply);
     messages.push({role:"assistant",content:parsed.text});
-    dynamicSuggestions=parsed.suggestions.length>0?parsed.suggestions:getFallbackSuggestions(currentChar);
+    dynamicSuggestions=parsed.suggestions.length?parsed.suggestions:getFallbackSuggestions(ch);
+    typingRow.remove();
     playReceiveSound();
+    startReveal(ch,parsed.text,dynamicSuggestions);
   }catch(e){
-    messages.push({role:"assistant",content:`⚠️ 接続エラーが発生しました。(${e.message}) もう一度お試しください。`});
+    if(epoch!==chatEpoch||currentChar!==ch)return;
+    const message=`⚠️ 接続エラーが発生しました。(${e.message}) もう一度お試しください。`;
+    messages.push({role:"assistant",content:message});
     dynamicSuggestions=[];
+    typingRow.remove();
+    appendChatNode(nodeFromHTML(`<div class="bubble-group">${assistantRowHTML(ch,message,true,true)}</div>`),true);
   }finally{
-    isLoading=false;renderMessages();
+    if(epoch===chatEpoch&&currentChar===ch){isLoading=false;updateSendBtn();}
   }
 }
 
@@ -568,9 +688,25 @@ function closeProfile(e){
 
 renderTags();renderCards();
 
+// スクロールを手動で戻したら自動追従を解除。末尾に戻ると再開する。
+const chatScroller=document.getElementById("messages");
+chatScroller.addEventListener("scroll",()=>{
+  const top=chatScroller.scrollTop;
+  const bottom=chatScroller.scrollHeight-top-chatScroller.clientHeight;
+  if(top<previousChatScroll-2&&bottom>75){
+    userReadingHistory=true;
+    // 動作中の smooth scroll を停止する（ユーザー操作を優先）。
+    chatScroller.scrollTo({top,behavior:"instant"});
+  }else if(bottom<40)userReadingHistory=false;
+  previousChatScroll=top;
+},{passive:true});
+chatScroller.addEventListener("wheel",e=>{if(e.deltaY<0)userReadingHistory=true;},{passive:true});
+
 document.getElementById("messages").addEventListener("click",function(e){
+  const skip=e.target.closest(".reveal-skip");
+  if(skip){const follow=nearChatBottom(160);cancelReveal(true,true);if(follow)scrollChatToEnd(true);return;}
   const btn=e.target.closest(".suggestion-btn");
-  if(btn&&btn.dataset.suggestion){dynamicSuggestions=[];sendMessage(btn.dataset.suggestion);}
+  if(btn&&btn.dataset.suggestion){sendMessage(btn.dataset.suggestion);}
 });
 </script>
 
