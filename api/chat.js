@@ -28,8 +28,9 @@ export default async function handler(req, res) {
         "anthropic-version": "2023-06-01",
       },
       body: JSON.stringify({
-        model: "claude-haiku-4-5-20251001", // ← 更新済み
-        max_tokens: 500,
+        model: "claude-haiku-5-5", // 最新の低コストモデル
+        max_tokens: 768, // 新トークナイザーによるトークン増加に備える
+        thinking: { type: "disabled" }, // 人物との対話では応答速度を優先
         ...(system ? { system } : {}),
         messages,
       }),
