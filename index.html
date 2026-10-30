@@ -46,7 +46,7 @@
     .back-btn{background:none;border:none;padding:4px 8px 4px 0;color:#94a3b8;cursor:pointer;font-size:20px;font-weight:700;line-height:1;flex-shrink:0;transition:color 0.15s}
     .back-btn:active{color:#6366f1}
     .chat-avatar{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-    .messages{flex:1;min-height:0;overflow-y:auto;padding:14px 12px 22px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#f0f4ff;}
+    .messages{flex:1;min-height:0;overflow-y:auto;overflow-anchor:none;padding:14px 12px 22px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#f0f4ff;}
     .messages-inner{min-height:100%;max-width:700px;margin:0 auto;}
     .bio-card{background:#fff;border-radius:16px;padding:13px 15px;margin-bottom:12px;animation:fadeUp 0.4s}
     .bio-inner{display:flex;gap:10px;align-items:flex-start}
@@ -527,44 +527,43 @@ function nearChatBottom(tolerance=125){
   const el=document.getElementById("messages");
   return el.scrollHeight-el.scrollTop-el.clientHeight<tolerance;
 }
-function scrollChatToEnd(smooth=true){
-  const el=document.getElementById("messages"),epoch=chatEpoch;
-  if(userReadingHistory)return;
-  requestAnimationFrame(()=>{
-    if(userReadingHistory||epoch!==chatEpoch||!el.isConnected||document.getElementById("chat-view").classList.contains("hidden"))return;
-    el.scrollTo({top:el.scrollHeight,behavior:smooth&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches?"smooth":"auto"});
-  });
-}
-// 回答の先頭を見やすい位置に置く。末尾への強制スクロールは行わない。
-function moveChatScrollTo(top,smooth=true){
+// 最初の回答を下で見せないため、プログラムによるスクロールと手動操作を分ける。
+// 特にiOS Safariでは、typing行の削除などで発生するscrollイベントは手動操作ではない。
+function moveChatScrollTo(top,smooth=true,force=false){
   const el=document.getElementById("messages");
-  if(userReadingHistory||!el.clientHeight)return;
+  if((userReadingHistory&&!force)||!el.clientHeight)return;
   const max=Math.max(0,el.scrollHeight-el.clientHeight);
   const target=Math.max(0,Math.min(max,Math.round(top)));
   if(Math.abs(el.scrollTop-target)<2)return;
   const shouldAnimate=smooth&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  automaticChatScrollUntil=Date.now()+(shouldAnimate?1100:150);
-  el.scrollTo({top:target,behavior:shouldAnimate?"smooth":"auto"});
+  automaticChatScrollUntil=Date.now()+(shouldAnimate?850:180);
+  // instantは、直前のsmooth scrollをキャンセルするためにも使用する。
+  if(!shouldAnimate)el.scrollTo({top:target,behavior:"instant"});
+  else el.scrollTo({top:target,behavior:"smooth"});
+  previousChatScroll=target;
+}
+function scrollChatToEnd(){
+  const el=document.getElementById("messages");
+  if(!userReadingHistory)moveChatScrollTo(el.scrollHeight,false);
 }
 function showFirstReplyNearTop(node){
-  if(!node?.isConnected||userReadingHistory)return;
+  if(!node?.isConnected)return;
   const el=document.getElementById("messages");
   const top=el.scrollTop+node.getBoundingClientRect().top-el.getBoundingClientRect().top-14;
-  moveChatScrollTo(top,true);
+  // 1つ目だけは必ず即座に上へ配置する。下部への表示やsmoothとの競合を防ぐ。
+  moveChatScrollTo(top,false,true);
 }
 function showNextReplyIfNeeded(node){
   if(!node?.isConnected||userReadingHistory)return;
   const el=document.getElementById("messages"),rect=el.getBoundingClientRect(),bubble=node.getBoundingClientRect();
-  // 表示できている文章は動かさず、下に隠れた分だけゆっくり追いかける。
-  const availableBottom=rect.bottom-75;
-  if(bubble.bottom>availableBottom){
-    moveChatScrollTo(el.scrollTop+bubble.bottom-availableBottom,true);
-  }
+  // 2つ目以降はすでに読んでいる文章を動かさず、見切れる分だけ追いかける。
+  const availableBottom=rect.bottom-55;
+  if(bubble.bottom>availableBottom)moveChatScrollTo(el.scrollTop+bubble.bottom-availableBottom,true);
 }
 function appendChatNode(node,follow=false){
   const inner=messageInner();if(!inner)return;
   inner.append(node);
-  if(follow)scrollChatToEnd(true);
+  if(follow)scrollChatToEnd();
 }
 function assistantRowHTML(ch,text,first=true,animate=false){
   return `<div class="bubble-row assistant${first?"":" continuation"}${animate?" is-new":""}">
@@ -648,7 +647,7 @@ function startReveal(ch,reply,suggestions){
   // この余白は次の発言時に取り除くので、保存履歴やAPIには影響しない。
   const scroller=document.getElementById("messages");
   const spacer=nodeFromHTML('<div class="reveal-scroll-room" aria-hidden="true"></div>');
-  spacer.style.height=`${Math.max(180,Math.ceil(scroller.clientHeight*.94))}px`;
+  spacer.style.height=`${Math.max(240,Math.ceil(scroller.clientHeight+48))}px`;
   appendChatNode(spacer,false);
   const state={group,spacer,ch,chunks,suggestions,index:0,timer:null,status:null};
   activeReveal=state;
@@ -656,9 +655,12 @@ function startReveal(ch,reply,suggestions){
     if(activeReveal!==state||currentChar!==ch)return;
     state.status?.remove();state.status=null;
     const part=state.chunks[state.index];
-    const row=nodeFromHTML(assistantRowHTML(ch,part,state.index===0,true));
-    group.append(row);
     const first=state.index===0;
+    // 最初のバブルは表示前に位置を確定する。iOSでは描画後のsmooth移動だけでは遅い。
+    const row=nodeFromHTML(assistantRowHTML(ch,part,first,true));
+    if(first)row.style.visibility="hidden";
+    group.append(row);
+    if(first)showFirstReplyNearTop(row);
     state.index++;
     if(state.index<state.chunks.length){
       state.status=makeRevealStatus(ch);
@@ -669,12 +671,24 @@ function startReveal(ch,reply,suggestions){
       activeReveal=null;
       if(suggestions.length)spacer.before(nodeFromHTML(suggestionHTML(ch,suggestions)));
     }
-    // 1つ目は上部に。以降は読む位置を守り、次の吹き出しが隠れる場合だけ移動。
-    requestAnimationFrame(()=>{
-      if(currentChar!==ch||!row.isConnected)return;
-      if(first)showFirstReplyNearTop(row);
-      else showNextReplyIfNeeded(row);
-    });
+    // バブルが最初に見えるフレームの前に、必ず上側の位置を確定する。
+    if(first){
+      requestAnimationFrame(()=>{
+        if(currentChar!==ch||!row.isConnected)return;
+        showFirstReplyNearTop(row);
+        row.style.visibility="";
+        // フォント描画やiOSの表示領域更新で変動した場合にだけ微調整する。
+        requestAnimationFrame(()=>{
+          if(currentChar!==ch||!row.isConnected)return;
+          showFirstReplyNearTop(row);
+        });
+      });
+    }else{
+      requestAnimationFrame(()=>{
+        if(currentChar!==ch||!row.isConnected)return;
+        showNextReplyIfNeeded(row);
+      });
+    }
   };
   addNext();
 }
@@ -785,7 +799,11 @@ async function sendMessage(text){
   const userRow=nodeFromHTML(userRowHTML(ch,question,true));
   const typingRow=nodeFromHTML(typingHTML(ch));
   appendChatNode(userRow,false);
-  appendChatNode(typingRow,true);
+  appendChatNode(typingRow,false);
+  // 質問が送られたら質問自体を上寄りに。回答が届くとその先頭を上寄りにする。
+  const scroller=document.getElementById("messages");
+  const questionTop=scroller.scrollTop+userRow.getBoundingClientRect().top-scroller.getBoundingClientRect().top-16;
+  moveChatScrollTo(questionTop,false,true);
   updateSendBtn();
   playSendSound();
   try{
@@ -876,22 +894,28 @@ function closeProfile(e){
 
 renderTags();renderCards();
 
-// スクロールを手動で戻したら自動追従を解除。末尾に戻ると再開する。
+// scrollイベントだけでは手動スクロールか判別できない（iPhoneのレイアウト変化でも発火する）。
+// 実際の操作で履歴を上へ読んだ時だけ、以降のバブルの追従を止める。
 const chatScroller=document.getElementById("messages");
+let chatTouchStartY=null;
 chatScroller.addEventListener("scroll",()=>{
-  const top=chatScroller.scrollTop;
-  const bottom=chatScroller.scrollHeight-top-chatScroller.clientHeight;
-  if(Date.now()<automaticChatScrollUntil){previousChatScroll=top;return;}
-  if(top<previousChatScroll-2&&bottom>75){
-    userReadingHistory=true;
-    // 動作中の smooth scroll を停止する（ユーザー操作を優先）。
-    chatScroller.scrollTo({top,behavior:"instant"});
-  }else if(bottom<40)userReadingHistory=false;
-  previousChatScroll=top;
+  previousChatScroll=chatScroller.scrollTop;
+  const bottom=chatScroller.scrollHeight-chatScroller.scrollTop-chatScroller.clientHeight;
+  if(bottom<35 && Date.now()>automaticChatScrollUntil)userReadingHistory=false;
 },{passive:true});
-chatScroller.addEventListener("wheel",e=>{if(e.deltaY<0){userReadingHistory=true;automaticChatScrollUntil=0;}},{passive:true});
-chatScroller.addEventListener("touchstart",()=>{automaticChatScrollUntil=0;},{passive:true});
-chatScroller.addEventListener("touchmove",()=>{userReadingHistory=true;automaticChatScrollUntil=0;},{passive:true});
+chatScroller.addEventListener("wheel",e=>{
+  if(e.deltaY<0){userReadingHistory=true;automaticChatScrollUntil=0;}
+  else if(e.deltaY>0&&nearChatBottom(40))userReadingHistory=false;
+},{passive:true});
+chatScroller.addEventListener("touchstart",e=>{chatTouchStartY=e.touches?.[0]?.clientY??null;},{passive:true});
+chatScroller.addEventListener("touchmove",e=>{
+  const y=e.touches?.[0]?.clientY;
+  if(y!==undefined&&chatTouchStartY!==null&&y>chatTouchStartY+8){userReadingHistory=true;automaticChatScrollUntil=0;}
+},{passive:true});
+chatScroller.addEventListener("touchend",()=>{chatTouchStartY=null;},{passive:true});
+chatScroller.addEventListener("keydown",e=>{
+  if(["ArrowUp","PageUp","Home"].includes(e.key)){userReadingHistory=true;automaticChatScrollUntil=0;}
+},{passive:true});
 
 document.getElementById("messages").addEventListener("click",function(e){
   if(e.target.closest("[data-older]")){showOlderHistory();return;}
