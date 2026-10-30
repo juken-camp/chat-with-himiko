@@ -47,7 +47,7 @@
     .back-btn:active{color:#6366f1}
     .chat-avatar{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
     .messages{flex:1;min-height:0;overflow-y:auto;overflow-anchor:none;padding:14px 12px 22px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#f0f4ff;}
-    .messages-inner{min-height:100%;max-width:700px;margin:0 auto;}
+    .messages-inner{max-width:700px;margin:0 auto;}
     .bio-card{background:#fff;border-radius:16px;padding:13px 15px;margin-bottom:12px;animation:fadeUp 0.4s}
     .bio-inner{display:flex;gap:10px;align-items:flex-start}
     /* 質問候補は送信メッセージと同じ右側に配置 */
@@ -61,7 +61,7 @@
     .bubble-group{margin-bottom:14px;}
     .bubble-row{display:flex;margin-bottom:10px;gap:8px;align-items:flex-end;}
     .bubble-row.user{justify-content:flex-end;margin-bottom:15px;}
-    .bubble-row.is-new{animation:messageArrive .36s cubic-bezier(.2,.75,.2,1) both;}
+    .bubble-row.is-new{animation:messageArrive .28s cubic-bezier(.2,.75,.2,1) both;}
     .bubble-row.continuation{margin-top:-3px;}
     .bubble-avatar,.bubble-avatar-spacer{width:33px;min-width:33px;height:33px;flex-shrink:0;}
     .bubble-avatar{border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:17px;}
@@ -526,39 +526,20 @@ function nearChatBottom(tolerance=125){
   const el=document.getElementById("messages");
   return el.scrollHeight-el.scrollTop-el.clientHeight<tolerance;
 }
-// 回答の先頭を自然な位置へ誘導する。実体のない余白は一切作らない。
-// iOS Safariではscrollイベントだけでは手動操作か判定できないので、タッチ操作を優先する。
-function moveChatScrollTo(top,smooth=true){
+// 通常のメッセージアプリと同じ追従方式。
+// 見えない余白や未表示バブルを配置せず、実際に追加された要素の末尾まで移動する。
+// 手動で履歴をさかのぼっている間は、画面位置を一切変更しない。
+function scrollChatToEnd(smooth=false, force=false){
   const el=document.getElementById("messages");
-  if(userReadingHistory||!el.clientHeight)return;
-  const max=Math.max(0,el.scrollHeight-el.clientHeight);
-  const target=Math.max(0,Math.min(max,Math.round(top)));
-  if(Math.abs(el.scrollTop-target)<3)return;
-  const animated=smooth&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  automaticChatScrollUntil=Date.now()+(animated?650:100);
-  el.scrollTo({top:target,behavior:animated?"smooth":"instant"});
-  previousChatScroll=target;
-}
-function scrollChatToEnd(smooth=false){
-  const el=document.getElementById("messages");
-  moveChatScrollTo(el.scrollHeight,smooth);
-}
-// 続きの吹き出しはDOM内にすべて確保済み。回答の実際の高さの範囲だけで移動できる。
-function positionFirstReply(node){
-  if(!node?.isConnected||userReadingHistory)return;
-  const el=document.getElementById("messages");
-  const box=el.getBoundingClientRect(),row=node.getBoundingClientRect();
-  // 先頭を画面の上から約15％の位置に置く。短い回答なら自然に末尾で止まる。
-  const preferred=box.top+Math.min(90,el.clientHeight*.15);
-  const target=el.scrollTop+row.top-preferred;
-  moveChatScrollTo(target,true);
-}
-function showNextReplyIfNeeded(node){
-  if(!node?.isConnected||userReadingHistory)return;
-  const el=document.getElementById("messages"),box=el.getBoundingClientRect(),row=node.getBoundingClientRect();
-  // 下で見切れた部分だけを追いかける。上を読んでいる場合は自動移動しない。
-  const limit=box.bottom-24;
-  if(row.bottom>limit)moveChatScrollTo(el.scrollTop+row.bottom-limit,true);
+  if(!el?.clientHeight||(!force&&userReadingHistory))return;
+  const epoch=chatEpoch;
+  requestAnimationFrame(()=>{
+    if(epoch!==chatEpoch||!el.isConnected||(!force&&userReadingHistory))return;
+    const end=Math.max(0,el.scrollHeight-el.clientHeight);
+    if(Math.abs(el.scrollTop-end)<2)return;
+    automaticChatScrollUntil=Date.now()+(smooth?700:100);
+    el.scrollTo({top:end,behavior:smooth&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches?"smooth":"auto"});
+  });
 }
 function appendChatNode(node,follow=false){
   const inner=messageInner();if(!inner)return;
@@ -637,68 +618,49 @@ function makeRevealStatus(ch){
     <button type="button" class="reveal-skip">すべて表示</button>
   </div>`);
 }
-// API応答は1回だけ取得し、実際に存在する回答の高さだけを先に確保する。
-// 以前のダミー余白による過剰スクロール／急激な位置移動を防ぐ。
+// 回答は取得済みの1回分を、1つずつDOMに追加する。
+// 以前の「未表示バブルをまとめて確保→先頭へ強制移動」は廃止。
+// スクロールするのは会話の末尾のみ。回答が終わったら質問候補まで追従する。
 function startReveal(ch,reply,suggestions){
   cancelReveal(false);
   const chunks=splitReplyBubbles(reply);
   const group=nodeFromHTML('<div class="bubble-group"></div>');
-  const rows=chunks.map((part,index)=>{
-    const row=nodeFromHTML(assistantRowHTML(ch,part,index===0,true));
-    row.classList.add('pending-reveal');
-    row.style.visibility='hidden';
-    row.setAttribute('aria-hidden','true');
-    group.append(row);
-    return row;
-  });
   appendChatNode(group,false);
-  const state={group,ch,chunks,rows,suggestions,index:0,timer:null,status:null,firstTimer:null};
+  const state={group,ch,chunks,suggestions,index:0,timer:null,status:null};
   activeReveal=state;
   const addNext=()=>{
-    if(activeReveal!==state||currentChar!==ch)return;
+    if(activeReveal!==state||currentChar!==ch||!group.isConnected)return;
     state.status?.remove();state.status=null;
-    const i=state.index,row=rows[i];
-    row.style.visibility='';
-    row.classList.remove('pending-reveal');
-    row.removeAttribute('aria-hidden');
-    state.index++;
-    if(state.index<rows.length){
+    const i=state.index++;
+    group.append(nodeFromHTML(assistantRowHTML(ch,chunks[i],i===0,true)));
+    if(state.index<chunks.length){
       state.status=makeRevealStatus(ch);
-      row.after(state.status);
+      group.append(state.status);
       const readingTime=Math.max(2600,Math.min(5000,chunks[i].length*48));
       state.timer=setTimeout(addNext,readingTime);
     }else{
       activeReveal=null;
       if(suggestions.length)group.after(nodeFromHTML(suggestionHTML(ch,suggestions)));
     }
-    if(i>0)requestAnimationFrame(()=>showNextReplyIfNeeded(row));
+    scrollChatToEnd(true);
   };
-  // 先頭バブルは隠したまま、質問から回答へ滑らかに視点を動かす。
-  // 移動が始まってから初回バブルを表示するため「出た瞬間に飛ぶ」を防ぐ。
-  requestAnimationFrame(()=>{
-    if(activeReveal!==state||currentChar!==ch)return;
-    positionFirstReply(rows[0]);
-    const delay=window.matchMedia('(prefers-reduced-motion: reduce)').matches?0:230;
-    state.firstTimer=setTimeout(addNext,delay);
-  });
+  // 回答の最初から表示する。先頭へのジャンプや表示前の画面移動はしない。
+  addNext();
 }
 function cancelReveal(showRest=false,showQuestions=false){
   const state=activeReveal;if(!state)return;
   clearTimeout(state.timer);
-  clearTimeout(state.firstTimer);
   activeReveal=null;
   state.status?.remove();
   if(showRest){
-    while(state.index<state.rows.length){
-      const row=state.rows[state.index++];
-      row.style.visibility='';
-      row.classList.remove('pending-reveal');
-      row.removeAttribute('aria-hidden');
+    while(state.index<state.chunks.length){
+      const i=state.index++;
+      state.group.append(nodeFromHTML(assistantRowHTML(state.ch,state.chunks[i],i===0)));
     }
-    if(showQuestions&&state.suggestions.length)state.group.after(nodeFromHTML(suggestionHTML(state.ch,state.suggestions)));
-  }else{
-    // 画面切替時は隠れた未表示行を残さない。
-    state.rows.forEach(row=>{row.style.visibility='';row.classList.remove('pending-reveal');row.removeAttribute('aria-hidden')});
+    if(showQuestions&&state.suggestions.length){
+      state.group.after(nodeFromHTML(suggestionHTML(state.ch,state.suggestions)));
+      scrollChatToEnd(true);
+    }
   }
 }
 
@@ -888,27 +850,42 @@ function closeProfile(e){
 
 renderTags();renderCards();
 
-// scrollイベントだけでは手動スクロールか判別できない（iPhoneのレイアウト変化でも発火する）。
-// 実際の操作で履歴を上へ読んだ時だけ、以降のバブルの追従を止める。
+// iOS Safariの慣性スクロールやプログラムによるscrollイベントは、
+// 「読書中のユーザーが最下部に戻った」根拠にしない。
 const chatScroller=document.getElementById("messages");
-let chatTouchStartY=null;
+let chatTouchStartY=null,chatUserMovingDown=false;
+function pauseChatFollow(){
+  userReadingHistory=true;
+  chatUserMovingDown=false;
+  automaticChatScrollUntil=0;
+  // すでに開始したsmoothスクロールも止める。
+  chatScroller.scrollTo({top:chatScroller.scrollTop,behavior:"instant"});
+}
+function resumeChatFollowIfAtBottom(){
+  if(chatUserMovingDown&&nearChatBottom(45)){
+    userReadingHistory=false;
+    chatUserMovingDown=false;
+  }
+}
 chatScroller.addEventListener("scroll",()=>{
   previousChatScroll=chatScroller.scrollTop;
-  const bottom=chatScroller.scrollHeight-chatScroller.scrollTop-chatScroller.clientHeight;
-  if(bottom<35 && Date.now()>automaticChatScrollUntil)userReadingHistory=false;
+  resumeChatFollowIfAtBottom();
 },{passive:true});
 chatScroller.addEventListener("wheel",e=>{
-  if(e.deltaY<0){userReadingHistory=true;automaticChatScrollUntil=0;chatScroller.scrollTo({top:chatScroller.scrollTop,behavior:'instant'});}
-  else if(e.deltaY>0&&nearChatBottom(40))userReadingHistory=false;
+  if(e.deltaY<0)pauseChatFollow();
+  else if(e.deltaY>0){chatUserMovingDown=true;resumeChatFollowIfAtBottom();}
 },{passive:true});
 chatScroller.addEventListener("touchstart",e=>{chatTouchStartY=e.touches?.[0]?.clientY??null;},{passive:true});
 chatScroller.addEventListener("touchmove",e=>{
   const y=e.touches?.[0]?.clientY;
-  if(y!==undefined&&chatTouchStartY!==null&&y>chatTouchStartY+8){userReadingHistory=true;automaticChatScrollUntil=0;}
+  if(y===undefined||chatTouchStartY===null)return;
+  if(y>chatTouchStartY+8){pauseChatFollow();chatTouchStartY=y;}
+  else if(y<chatTouchStartY-8){chatUserMovingDown=true;chatTouchStartY=y;resumeChatFollowIfAtBottom();}
 },{passive:true});
 chatScroller.addEventListener("touchend",()=>{chatTouchStartY=null;},{passive:true});
 chatScroller.addEventListener("keydown",e=>{
-  if(["ArrowUp","PageUp","Home"].includes(e.key)){userReadingHistory=true;automaticChatScrollUntil=0;}
+  if(["ArrowUp","PageUp","Home"].includes(e.key))pauseChatFollow();
+  else if(["ArrowDown","PageDown","End"].includes(e.key)){chatUserMovingDown=true;resumeChatFollowIfAtBottom();}
 },{passive:true});
 
 document.getElementById("messages").addEventListener("click",function(e){
