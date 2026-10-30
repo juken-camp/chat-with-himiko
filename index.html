@@ -59,6 +59,7 @@
     .suggestion-btn:focus-visible,.reveal-skip:focus-visible{outline:2px solid #4f46e5;outline-offset:3px;}
     @media(hover:hover){.suggestion-btn:hover{background:#f8fafc;}}
     .bubble-group{margin-bottom:14px;}
+    .reveal-scroll-room{pointer-events:none;flex:none;}
     .bubble-row{display:flex;margin-bottom:10px;gap:8px;align-items:flex-end;}
     .bubble-row.user{justify-content:flex-end;margin-bottom:15px;}
     .bubble-row.is-new{animation:messageArrive .36s cubic-bezier(.2,.75,.2,1) both;}
@@ -283,6 +284,7 @@ const TAGS=[{id:"all",label:"すべて",emoji:"📋"},{id:"fav",label:"お気に
 const allChars=[AI_SENSEI,...CHARACTERS];
 let currentTag="all",currentChar=null,messages=[],isLoading=false,dynamicSuggestions=[];
 let chatEpoch=0,activeReveal=null,userReadingHistory=false,previousChatScroll=0;
+let automaticChatScrollUntil=0;
 let chatReady=false,historyVisiblePairs=40;
 const HISTORY_PAGE_PAIRS=40;
 // 生徒が多くの会話を保存しても、AIには直近の完了した会話だけを渡す。
@@ -533,6 +535,32 @@ function scrollChatToEnd(smooth=true){
     el.scrollTo({top:el.scrollHeight,behavior:smooth&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches?"smooth":"auto"});
   });
 }
+// 回答の先頭を見やすい位置に置く。末尾への強制スクロールは行わない。
+function moveChatScrollTo(top,smooth=true){
+  const el=document.getElementById("messages");
+  if(userReadingHistory||!el.clientHeight)return;
+  const max=Math.max(0,el.scrollHeight-el.clientHeight);
+  const target=Math.max(0,Math.min(max,Math.round(top)));
+  if(Math.abs(el.scrollTop-target)<2)return;
+  const shouldAnimate=smooth&&!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  automaticChatScrollUntil=Date.now()+(shouldAnimate?1100:150);
+  el.scrollTo({top:target,behavior:shouldAnimate?"smooth":"auto"});
+}
+function showFirstReplyNearTop(node){
+  if(!node?.isConnected||userReadingHistory)return;
+  const el=document.getElementById("messages");
+  const top=el.scrollTop+node.getBoundingClientRect().top-el.getBoundingClientRect().top-14;
+  moveChatScrollTo(top,true);
+}
+function showNextReplyIfNeeded(node){
+  if(!node?.isConnected||userReadingHistory)return;
+  const el=document.getElementById("messages"),rect=el.getBoundingClientRect(),bubble=node.getBoundingClientRect();
+  // 表示できている文章は動かさず、下に隠れた分だけゆっくり追いかける。
+  const availableBottom=rect.bottom-75;
+  if(bubble.bottom>availableBottom){
+    moveChatScrollTo(el.scrollTop+bubble.bottom-availableBottom,true);
+  }
+}
 function appendChatNode(node,follow=false){
   const inner=messageInner();if(!inner)return;
   inner.append(node);
@@ -615,16 +643,22 @@ function startReveal(ch,reply,suggestions){
   cancelReveal(false);
   const chunks=splitReplyBubbles(reply);
   const group=nodeFromHTML('<div class="bubble-group"></div>');
-  const follow=nearChatBottom(160);
   appendChatNode(group,false);
-  const state={group,ch,chunks,suggestions,index:0,timer:null,status:null};
+  // 会話が短くても最初の回答を上寄りに移動できるよう、下側に余白を確保する。
+  // この余白は次の発言時に取り除くので、保存履歴やAPIには影響しない。
+  const scroller=document.getElementById("messages");
+  const spacer=nodeFromHTML('<div class="reveal-scroll-room" aria-hidden="true"></div>');
+  spacer.style.height=`${Math.max(180,Math.ceil(scroller.clientHeight*.94))}px`;
+  appendChatNode(spacer,false);
+  const state={group,spacer,ch,chunks,suggestions,index:0,timer:null,status:null};
   activeReveal=state;
   const addNext=()=>{
     if(activeReveal!==state||currentChar!==ch)return;
-    const shouldFollow=nearChatBottom(160);
     state.status?.remove();state.status=null;
     const part=state.chunks[state.index];
-    group.append(nodeFromHTML(assistantRowHTML(ch,part,state.index===0,true)));
+    const row=nodeFromHTML(assistantRowHTML(ch,part,state.index===0,true));
+    group.append(row);
+    const first=state.index===0;
     state.index++;
     if(state.index<state.chunks.length){
       state.status=makeRevealStatus(ch);
@@ -633,12 +667,16 @@ function startReveal(ch,reply,suggestions){
       state.timer=setTimeout(addNext,readingTime);
     }else{
       activeReveal=null;
-      if(suggestions.length)appendChatNode(nodeFromHTML(suggestionHTML(ch,suggestions)),false);
+      if(suggestions.length)spacer.before(nodeFromHTML(suggestionHTML(ch,suggestions)));
     }
-    if(shouldFollow)scrollChatToEnd(true);
+    // 1つ目は上部に。以降は読む位置を守り、次の吹き出しが隠れる場合だけ移動。
+    requestAnimationFrame(()=>{
+      if(currentChar!==ch||!row.isConnected)return;
+      if(first)showFirstReplyNearTop(row);
+      else showNextReplyIfNeeded(row);
+    });
   };
   addNext();
-  if(follow)scrollChatToEnd(true);
 }
 function cancelReveal(showRest=false,showQuestions=false){
   const state=activeReveal;if(!state)return;
@@ -649,7 +687,7 @@ function cancelReveal(showRest=false,showQuestions=false){
       state.group.append(nodeFromHTML(assistantRowHTML(state.ch,state.chunks[state.index],state.index===0,false)));
       state.index++;
     }
-    if(showQuestions&&state.suggestions.length)appendChatNode(nodeFromHTML(suggestionHTML(state.ch,state.suggestions)),false);
+    if(showQuestions&&state.suggestions.length)state.spacer.before(nodeFromHTML(suggestionHTML(state.ch,state.suggestions)));
   }
 }
 
@@ -736,6 +774,7 @@ function playReceiveSound(){
 async function sendMessage(text){
   if(!text||!text.trim()||isLoading||!currentChar||!chatReady)return;
   cancelReveal(true,false);
+  messageInner()?.querySelectorAll(".reveal-scroll-room").forEach(n=>n.remove());
   const ch=currentChar,epoch=chatEpoch,question=text.trim();
   messageInner()?.querySelectorAll(".suggestions").forEach(n=>n.remove());
   messages.push({role:"user",content:question});
@@ -842,6 +881,7 @@ const chatScroller=document.getElementById("messages");
 chatScroller.addEventListener("scroll",()=>{
   const top=chatScroller.scrollTop;
   const bottom=chatScroller.scrollHeight-top-chatScroller.clientHeight;
+  if(Date.now()<automaticChatScrollUntil){previousChatScroll=top;return;}
   if(top<previousChatScroll-2&&bottom>75){
     userReadingHistory=true;
     // 動作中の smooth scroll を停止する（ユーザー操作を優先）。
@@ -849,12 +889,14 @@ chatScroller.addEventListener("scroll",()=>{
   }else if(bottom<40)userReadingHistory=false;
   previousChatScroll=top;
 },{passive:true});
-chatScroller.addEventListener("wheel",e=>{if(e.deltaY<0)userReadingHistory=true;},{passive:true});
+chatScroller.addEventListener("wheel",e=>{if(e.deltaY<0){userReadingHistory=true;automaticChatScrollUntil=0;}},{passive:true});
+chatScroller.addEventListener("touchstart",()=>{automaticChatScrollUntil=0;},{passive:true});
+chatScroller.addEventListener("touchmove",()=>{userReadingHistory=true;automaticChatScrollUntil=0;},{passive:true});
 
 document.getElementById("messages").addEventListener("click",function(e){
   if(e.target.closest("[data-older]")){showOlderHistory();return;}
   const skip=e.target.closest(".reveal-skip");
-  if(skip){const follow=nearChatBottom(160);cancelReveal(true,true);if(follow)scrollChatToEnd(true);return;}
+  if(skip){cancelReveal(true,true);return;}
   const btn=e.target.closest(".suggestion-btn");
   if(btn&&btn.dataset.suggestion){sendMessage(btn.dataset.suggestion);}
 });
