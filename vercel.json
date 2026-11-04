@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/himiko-deliver.js": {
+      "maxDuration": 60
+    }
+  }
+}
