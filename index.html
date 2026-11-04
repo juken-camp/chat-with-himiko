@@ -2033,6 +2033,31 @@ html body #list-view > .header #search-input {
 #himiko-order-confirm .order-dialog-actions button:active{filter:brightness(.94)}
 #himiko-order-confirm .order-dialog-actions button:focus-visible{outline:2px solid #6366f1;outline-offset:3px}
 </style>
+<style id="himiko-presence-badge-front-20261104">
+/* Portraits remain rounded, while the status markers sit on TOP and do not get clipped. */
+html body #list-view #card-list .char-card .avatar {
+  overflow:visible!important;
+  isolation:isolate;
+}
+html body #list-view #card-list .char-card .avatar .history-avatar-image {
+  z-index:1;
+  border-radius:inherit;
+}
+html body #list-view #card-list .char-card .avatar .online-dot {
+  position:absolute;
+  z-index:20!important;
+  right:-1px;
+  bottom:-1px;
+  pointer-events:none;
+  box-sizing:border-box;
+}
+html body #list-view #card-list .char-card.group-met .avatar .online-dot {
+  right:13px;
+}
+html body #list-view #card-list .char-card.group-met .avatar::after {
+  z-index:21!important;
+}
+</style>
 </head>
 <body>
 
@@ -2135,13 +2160,8 @@ html body #list-view > .header #search-input {
 
 // App guidance follows the outfit; historical characters and chat content keep
 // their own voices. Always choose from source copy so switching is reversible.
-function himikoUi(neko,cyber){return document.documentElement.dataset.persona==='cyber'?cyber:neko;}
-function himikoGuideCopy(text){
- return text.replace(/([^。]+)。/g,(_,sentence)=>{
-  if(document.documentElement.dataset.persona!=='cyber')return sentence.replace(/だ$/,'')+'にゃ。';
-  return sentence+(/だ$/.test(sentence)?'ぜ':/[るたいうくぐすつぬぶむ]$/.test(sentence)?'ぜ':'だぜ')+'。';
- });
-}
+// Standalone Himiko app: the interface is neutral; each historical persona retains its own voice.
+function himikoGuideCopy(text){return text;}
 function syncHimikoPrompt(){
  const ch=typeof currentChar==='undefined'?null:currentChar;
  const subject=ch?((ch.isExplainer||ch.isNarrator)?ch.name+'について':(ch.isSpecial?'AI先生':ch.name)+'と'):'';
@@ -2151,10 +2171,10 @@ function syncHimikoPrompt(){
  search.setAttribute('aria-label',search.placeholder);
  document.getElementById('chat-reset').textContent='↻';
  document.querySelectorAll('.suggestions-label').forEach(el=>{
-  el.textContent=el.dataset.initial==='true'?himikoUi('💡 こんな質問をしてみようにゃ','💡 こんな質問をしてみようぜ'):himikoUi('💬 さらに聞いてみようにゃ','💬 さらに聞いてみようぜ');
+  el.textContent=el.dataset.initial==='true'?'💡 こんな質問をしてみよう':'💬 さらに聞いてみよう';
  });
- document.querySelectorAll('.reveal-skip').forEach(el=>el.textContent=himikoUi('すべて表示するにゃ','すべて表示するぜ'));
- document.querySelectorAll('.older-history').forEach(el=>el.textContent=himikoUi('↑ 過去の会話を表示するにゃ','↑ 過去の会話を表示するぜ')+`（残り${el.dataset.remaining}往復）`);
+ document.querySelectorAll('.reveal-skip').forEach(el=>el.textContent='すべて表示する');
+ document.querySelectorAll('.older-history').forEach(el=>el.textContent='↑ 過去の会話を表示する'+`（残り${el.dataset.remaining}往復）`);
 }
 
 const AI_SENSEI = {
@@ -3998,18 +4018,9 @@ function reloadPersonalTalkHistory(){
 let chatDbPromise=null,chatWrites=Promise.resolve();
 function setChatStorageStatus(text,state="ok"){
   const el=document.getElementById("chat-storage-status");
-  const copy={
-   '会話を読み込み中…':['会話を読み込んでいるにゃ…','会話を読み込んでいるぜ…'],
-   '保存した会話を読み込み中…':['保存した会話を読み込んでいるにゃ…','保存した会話を読み込んでいるぜ…'],
-   '保存中…':['会話を保存しているにゃ…','会話を保存しているぜ…'],
-   '✓ この端末に会話を保存済み':['✓ この端末に会話を保存したにゃ','✓ この端末に会話を保存したぜ'],
-   '✓ この端末の会話を復元しました':['✓ この端末の会話を復元したにゃ','✓ この端末の会話を復元したぜ'],
-   '✓ この端末に会話を自動保存':['✓ この端末に会話を自動保存するにゃ','✓ この端末に会話を自動保存するぜ'],
-   '⚠️ 会話を保存できません。ブラウザの保存設定をご確認ください':['⚠️ 会話を保存できなかったにゃ。ブラウザの保存設定を確認してみてにゃ','⚠️ 会話を保存できなかったぜ。ブラウザの保存設定を確認してくれよ'],
-   '⚠️ 保存データを読み込めません。会話の保存ができない可能性があります':['⚠️ 保存データを読み込めなかったにゃ。会話も保存できないかもしれないにゃ','⚠️ 保存データを読み込めなかったぜ。会話も保存できないかもしれないぜ']
-  }[text];
   el.dataset.sourceCopy=text;
-  el.textContent=copy?himikoUi(...copy):text;el.dataset.state=state;
+  el.textContent=text;
+  el.dataset.state=state;
 }
 function openChatDB(){
   if(!chatDbPromise){
@@ -4092,7 +4103,7 @@ function buildApiConversation(question){
 }
 async function resetCurrentChat(){
   const ch=currentChar;if(!ch||!chatReady||isLoading)return;
-  if(!confirm(himikoUi(`${ch.name}との保存済みの会話を削除して、新しい会話を始めるにゃ？\nこの操作は取り消せないにゃ。`,`${ch.name}との保存済みの会話を削除して、新しい会話を始めるか？\nこの操作は取り消せないぜ。`)))return;
+  if(!confirm(`${ch.name}との保存済みの会話を削除して、新しい会話を始めますか？\nこの操作は取り消せません。`))return;
   window.dispatchEvent(new CustomEvent('himiko-person-reset',{detail:{id:ch.id}}));
   setPersonalQuestions(currentChar,[]);
   chatEpoch++;cancelReveal(false);isLoading=false;
@@ -4282,7 +4293,7 @@ function renderCards(){
  if(q)list=list.filter(c=>c.name.toLowerCase().includes(q)||(c.aliases||[]).some(name=>name.toLowerCase().includes(q))||c.period.toLowerCase().includes(q)||c.catchphrase.toLowerCase().includes(q));
  updatePersonalTalkCount(list);
   const el=document.getElementById("card-list");
-  if(!list.length){el.innerHTML=`<div class="empty-state"><div style="font-size:36px;margin-bottom:10px">🔍</div><div style="font-weight:700">${himikoUi('該当する人物が見つからないにゃ','該当する人物が見つからないぜ')}</div></div>`;return;}
+  if(!list.length){el.innerHTML=`<div class="empty-state"><div style="font-size:36px;margin-bottom:10px">🔍</div><div style="font-weight:700">該当する人物が見つかりません</div></div>`;return;}
 
   el.innerHTML=list.map((ch,i)=>{
     const ai=ch.isSpecial;
@@ -4473,12 +4484,12 @@ function userRowHTML(ch,text,animate=false,at=null,read=false){
 function suggestionHTML(ch,questions,initial=false){
   if(!questions.length)return "";
   return `<div class="suggestions" aria-label="次の質問候補">
-    <div class="suggestions-label" data-initial="${initial}">${initial?himikoUi('💡 こんな質問をしてみようにゃ','💡 こんな質問をしてみようぜ'):himikoUi('💬 さらに聞いてみようにゃ','💬 さらに聞いてみようぜ')}</div>
+    <div class="suggestions-label" data-initial="${initial}">${initial?'💡 こんな質問をしてみよう':'💬 さらに聞いてみよう'}</div>
     <div class="suggestions-list">${questions.map(q=>`<button type="button" class="suggestion-btn" style="border:2px solid ${ch.color}38;color:${ch.color}" data-suggestion="${escAttr(q)}">${esc(q)}</button>`).join("")}</div>
   </div>`;
 }
 function typingHTML(ch){
-  return `<div class="bubble-row assistant typing-row" role="status" aria-label="${himikoUi('回答を作成しているにゃ','回答を作成しているぜ')}">
+  return `<div class="bubble-row assistant typing-row" role="status" aria-label="回答を作成中">
     <button type="button" class="bubble-avatar" aria-label="${escAttr(ch.name)}のプロフィールを見る" title="プロフィールを見る" onclick="showProfile()" style="background:linear-gradient(135deg,${ch.color},${ch.accent})">${historyAvatarHTML(ch)}</button>
     <div class="typing">${[0,.2,.4].map(d=>`<span class="typing-dot" style="background:${ch.color};animation-delay:${d}s"></span>`).join("")}</div>
   </div>`;
@@ -4501,7 +4512,7 @@ function renderMessages(resetScroll=true){
   const visible=olderCount?messages.slice(1+olderCount*2):messages;
   const markup=visible.map((m,i)=>historyDateHTML(m.at,visible[i-1]?.at)+(i+(olderCount?1+olderCount*2:0)===personalUnreadIndex?'<div id="personal-unread-divider" role="separator">ここから未読メッセージ</div>':'')+(m.role==="user"?userRowHTML(ch,m.content,false,m.at,m.read):
     `<div class="bubble-group">${(olderCount===0&&i===0?[m.content]:splitReplyBubbles(m.content)).map((part,index)=>assistantRowHTML(ch,part,index===0,false,m.chunkTimes?.[index]||m.at)).join("")}</div>`)).join("");
-  const older=olderCount?`<button type="button" class="older-history" data-older="1" data-remaining="${olderCount}">${himikoUi('↑ 過去の会話を表示するにゃ','↑ 過去の会話を表示するぜ')}（残り${olderCount}往復）</button>`:"";
+  const older=olderCount?`<button type="button" class="older-history" data-older="1" data-remaining="${olderCount}">↑ 過去の会話を表示する（残り${olderCount}往復）</button>`:"";
   const initial=messages.length<=1?ch.qs||[]:[];
   const followups=messages.length>1&&messages.at(-1)?.role==="assistant"?dynamicSuggestions:[];
   const el=document.getElementById("messages");
@@ -4552,7 +4563,7 @@ function splitReplyBubbles(text){
   return chunks.length?chunks:[source];
 }
 function makeRevealStatus(ch){
-  return nodeFromHTML(`<div class="reveal-status" role="status" aria-label="${himikoUi('続きの吹き出しを順番に表示するにゃ','続きの吹き出しを順番に表示するぜ')}">
+  return nodeFromHTML(`<div class="reveal-status" role="status" aria-label="続きの吹き出しを順番に表示中">
     <div class="typing reveal-typing-bubble" aria-hidden="true">${[0,.2,.4].map(d=>`<span class="typing-dot" style="background:${ch.color};animation-delay:${d}s"></span>`).join("")}</div>
   </div>`);
 }
@@ -4725,7 +4736,7 @@ function parseSuggestions(value,ch=currentChar){
   return {text,suggestions:completeSuggestions(candidates,ch,text)};
 }
 
-function syncHimikoSubtitle(){const el=document.querySelector('.himiko-subtitle');if(el)el.textContent=document.documentElement.dataset.persona==='cyber'?'わからないことはチャットで聞こうぜ':'わからないことはチャットで聞いてみようにゃ';}
+function syncHimikoSubtitle(){const el=document.querySelector('.himiko-subtitle');if(el)el.textContent='わからないことはチャットで聞いてみよう';}
 syncHimikoSubtitle();
 window.addEventListener('message',event=>{if(event.origin===location.origin&&event.data?.type==='nekopon-persona')syncHimikoSubtitle();});
 // Use the app's sound palette, volume and mute setting when embedded.
@@ -4798,7 +4809,7 @@ async function sendMessage(text){
     if(epoch!==chatEpoch||currentChar!==ch)return;
     // API障害の回答や未完了の質問を保存・次のAPIリクエストに混入させない。
     messages.pop();
-    const message=himikoUi(`⚠️ ${e.message} 質問は残してあるにゃ。もう一度送ってみてにゃ。`,`⚠️ ${e.message} 質問は残してあるぜ。もう一度送ってくれよ。`);
+    const message=`⚠️ ${e.message} 質問は残してあります。もう一度送信してください。`;
     dynamicSuggestions=[];
     typingRow.remove();userRow.remove();
     document.getElementById("msg-input").value=question;
