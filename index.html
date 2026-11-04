@@ -1053,16 +1053,6 @@ html[data-persona="cyber"] .embedded-heading-credit{color:#9cb9d4;}
 @media(max-width:600px){html.nekopon-embedded #list-view > .embedded-page-heading{width:calc(100% - 24px);}}
 html.nekopon-embedded #list-view .main-content{padding-top:0!important;}
 </style>
-<style id="group-chat-placeholder-style">
-#list-view .group-chat-placeholder{margin:0 0 9px;cursor:default;animation:none}
-#list-view .group-chat-placeholder:hover{transform:none;box-shadow:none}
-#list-view .group-chat-avatar{border:0;padding:0;cursor:pointer;color:#aa6432;background:linear-gradient(135deg,#fff2df,#f6d7b7)}
-#list-view .group-chat-title{font-size:16px;font-weight:900;color:#1e293b}
-#list-view .group-chat-caption{font-size:12px;font-weight:700;color:#a07960}
-html[data-persona="cyber"] #list-view .group-chat-avatar{color:#58ddff;background:linear-gradient(135deg,#18365a,#16465d)}
-html[data-persona="cyber"] #list-view .group-chat-title{color:#e0eaff}
-html[data-persona="cyber"] #list-view .group-chat-caption{color:#92c7e5}
-</style>
 <style id="group-chat-unified-style">
 
     * { box-sizing:border-box; margin:0; padding:0; }
@@ -1933,10 +1923,86 @@ html #list-view .hero~*{position:relative}
 html .group-heading-yoru,html .count-yoru{display:none!important}
 @media(max-width:390px){html #list-view .main-content{padding-inline:12px!important}}
 </style>
+
+<style id="himiko-standalone-original-header-restoration-20261104">
+/* The parent app's embedded-title CSS must not affect this standalone page. */
+html body #list-view > .header{
+ position:relative!important;top:auto!important;
+ box-sizing:border-box!important;display:block!important;
+ padding:0 14px!important;margin:0!important;
+ min-height:72px!important;
+ border:0!important;border-bottom:2px solid #e2e8f0!important;
+ box-shadow:0 2px 12px rgba(33,36,68,.07)!important;
+ background:#fff!important;
+}
+html body #list-view > .header > .header-inner{
+ box-sizing:border-box!important;display:flex!important;
+ flex-direction:row!important;flex-wrap:nowrap!important;
+ align-items:center!important;justify-content:space-between!important;
+ width:100%!important;max-width:700px!important;
+ min-height:72px!important;height:auto!important;
+ padding:10px 0!important;margin:0 auto!important;gap:12px!important;
+ background:transparent!important;
+}
+html body #list-view > .header > .header-inner > div{
+ box-sizing:border-box!important;display:flex!important;flex:1 1 auto!important;
+ width:auto!important;max-width:none!important;min-width:0!important;
+ align-items:center!important;gap:10px!important;
+}
+html body #list-view > .header .logo-box{
+ box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:center!important;
+ flex:none!important;width:42px!important;height:42px!important;
+ padding:0!important;border-radius:12px!important;
+ background:linear-gradient(135deg,#6366f1,#8b5cf6)!important;
+ box-shadow:none!important;font-size:23px!important;
+}
+html body #list-view > .header .header-inner > div > div:last-child{
+ flex:1 1 auto!important;min-width:0!important;max-width:none!important;overflow:visible!important;
+}
+html body #list-view > .header .header-inner > div > div:last-child > div:first-child{
+ font-size:clamp(14px,4vw,18px)!important;font-weight:900!important;
+ line-height:1.45!important;letter-spacing:-.5px!important;white-space:nowrap!important;
+ color:#1e293b!important;
+}
+html body #list-view > .header .header-inner > div > div:last-child > div:last-child{
+ font-size:10px!important;font-weight:800!important;line-height:1.6!important;
+ letter-spacing:1px!important;color:#6366f1!important;
+}
+html body #list-view > .header #search-input{
+ flex:0 0 auto!important;display:block!important;
+ width:clamp(105px,29vw,155px)!important;min-width:0!important;
+ max-width:36%!important;height:40px!important;min-height:40px!important;
+ margin:0!important;padding:8px 9px!important;
+ font:500 12px/1.3 'M PLUS Rounded 1c',sans-serif!important;
+ border:2px solid #e2e8f0!important;border-radius:12px!important;
+ background:#f8fafc!important;color:#1e293b!important;
+ box-shadow:none!important;
+}
+html body #list-view > .header #search-input::placeholder{color:#94a3b8!important;opacity:1!important}
+html body #list-view > .header #search-input:focus{outline:2px solid #a5b4fc!important;outline-offset:1px!important;border-color:#6366f1!important}
+/* Leave the original purple introductory hero untouched; restore the original moon and header spacing. */
+html body #list-view .main-content{padding-top:16px!important}
+html body #list-view .hero{margin-bottom:20px!important;background:linear-gradient(135deg,#6366f1 0%,#8b5cf6 55%,#a78bfa 100%)!important}
+html body #list-view #filter-count.filter-count{margin:0 0 14px!important;padding:0 2px!important;color:#4f46e5!important;}
+html body #list-view #filter-count .filter-count-text{color:#4f46e5!important;font-size:15px!important;font-weight:800!important}
+html body #list-view .nekopon-search-panel{margin:0 0 14px!important}
+/* No leftover beige Nekopon surfaces in the main list. */
+html body #list-view .nekopon-search-panel .filter-section:not([hidden]){border-top-color:#e2e8f0!important}
+html body #list-view .nekopon-search-panel .himiko-mode-guide{background:#f8f7ff!important;border-color:#ddd6fe!important;color:#4338ca!important}
+html body #chat-view .chat-header #chat-name,html body #chat-view .chat-header #chat-period{color:#1e293b!important}
+@media(max-width:355px){
+ html body #list-view > .header{padding:0 9px!important}
+ html body #list-view > .header > .header-inner{gap:6px!important}
+ html body #list-view > .header > .header-inner > div{gap:7px!important}
+ html body #list-view > .header .logo-box{width:36px!important;height:36px!important}
+ html body #list-view > .header .header-inner > div > div:last-child > div:first-child{font-size:13px!important}
+ html body #list-view > .header #search-input{width:100px!important;font-size:11px!important;padding:7px!important}
+}
+</style>
 </head>
 <body>
 
-<!-- LIST VIEW -->
+<!-- LIST VIEW: 個人チャット専用、歴史上の人物111名＋AI先生 -->
 
 <div id="list-view">
   <div class="header">
@@ -1957,16 +2023,6 @@ html .group-heading-yoru,html .count-yoru{display:none!important}
       <div style="font-size:11px;color:rgba(255,255,255,0.8);font-weight:800;letter-spacing:3px;margin-bottom:6px">中学の歴史 × AI先生</div>
       <h1 style="font-size:clamp(19px,5vw,26px);font-weight:900;color:#fff;line-height:1.35;margin-bottom:10px">歴史を学ぶなら<br>卑弥呼と受験対策！</h1>
       <p style="font-size:13px;color:rgba(255,255,255,0.85);line-height:1.7">AI先生が今度は歴史上の人物に変身⚡️</p>
-    </div>
-<div id="group-entry-heading" class="filter-count group-entry-heading"><span class="filter-count-icon" aria-hidden="true"><span class="count-neko">🌀</span><span class="count-yoru">🌀</span></span><span class="group-heading-neko">歴史上の偉人たちが、君のために集まっているよ！</span><span class="group-heading-yoru">歴史上の偉人たちが、君のために集まっているよ！</span></div>    <div class="group-chat-placeholder char-card" role="button" tabindex="0" aria-label="グループチャットを開く" onclick="openGroupChat()" onkeydown="if(event.target===this &amp;&amp; (event.key==='Enter' || event.key===' ')){event.preventDefault();openGroupChat()}">
-      <div class="card-inner">
-        <button type="button" class="avatar group-chat-avatar" aria-label="グループ画像を拡大" onclick="event.stopPropagation();openGroupImage(this)">
-          <img class="history-avatar-image" src="history-icons/group-chat.png?v=timemachine1" alt="" onerror="this.remove()">
-          <svg viewBox="0 0 48 48" width="34" height="34" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 12a6 6 0 0 1 6-6h24a6 6 0 0 1 6 6v18a6 6 0 0 1-6 6H22l-8 6v-6h-2a6 6 0 0 1-6-6V12Z" fill="white" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/><circle cx="16" cy="21" r="2.5" fill="currentColor"/><circle cx="24" cy="21" r="2.5" fill="currentColor"/><circle cx="32" cy="21" r="2.5" fill="currentColor"/></svg>
-        </button>
-        <div class="card-info"><div class="card-name-row"><span class="group-chat-title">グループチャット</span><span id="group-entry-typing" class="group-entry-typing" role="status" aria-label="返信を準備中" hidden><i></i><i></i><i></i></span></div><div class="group-chat-caption"><span class="group-caption-text">みんなで楽しい異次元の会話</span></div></div>
-      </div>
-      <span id="group-unread" class="group-unread" hidden></span>
     </div>
     <p id="filter-count" class="filter-count" aria-live="polite"><span class="filter-count-icon" aria-hidden="true"><span class="count-neko">💬</span><span class="count-yoru">💬</span></span><span class="filter-count-text"></span></p>
     <div class="nekopon-search-panel" aria-label="人物の検索と絞り込み">
@@ -2019,7 +2075,6 @@ html .group-heading-yoru,html .count-yoru{display:none!important}
   </div>
 </div>
 
-<section id="group-view" hidden aria-label="グループチャット"><header class="chat-header"><button class="back-btn" type="button" onclick="closeGroupChat()" aria-label="戻る">＜</button><div class="group-heading"><button type="button" id="group-header-avatar" class="chat-avatar" onclick="openGroupImage(this)" aria-label="グループ画像を拡大"><img src="history-icons/group-chat.png?v=timemachine1" alt="タイムマシーン" onerror="this.hidden=true;this.parentElement.textContent='💬'"></button><div class="group-heading-text"><button type="button" id="group-title" onclick="toggleGroupParticipants()" aria-label="参加者アイコンを表示" aria-expanded="false">グループチャット</button><button type="button" id="group-count" onclick="toggleGroupParticipants()" aria-label="参加者アイコンを表示" aria-expanded="false">(113)</button></div></div><div class="group-header-actions"><button type="button" id="group-members-direct" class="chat-reset" onclick="showGroupMembers()" aria-label="参加者一覧を開く" title="参加者一覧"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="7.5" cy="8" r=".8" fill="currentColor" stroke="none"/><circle cx="7.5" cy="12" r=".8" fill="currentColor" stroke="none"/><circle cx="7.5" cy="16" r=".8" fill="currentColor" stroke="none"/><path d="M11 8h6M11 12h6M11 16h6"/></svg></button><button type="button" id="group-reset" class="chat-reset" onclick="resetGroupChat()" aria-label="会話をリセット" title="会話をリセット" disabled>↻</button></div></header><div id="group-participant-strip" hidden><div id="group-participant-icons" aria-label="参加者アイコン"></div><button type="button" id="group-members-arrow" onclick="showGroupMembers()" aria-label="参加者一覧を開く">›</button></div><div id="group-status" role="alert" hidden></div><div id="group-messages" class="messages" aria-live="polite"><div id="group-messages-inner" class="messages-inner"></div></div><form id="group-form" class="input-area"><div id="group-quote-draft" hidden></div><div class="input-inner"><textarea id="group-input" rows="1" maxlength="2000" placeholder="おしゃべりしよう！"></textarea><button class="send-btn" id="group-send" type="submit" aria-label="送信" disabled>↑</button></div></form><div id="group-members" hidden><header class="members-header"><button class="back-btn" type="button" onclick="hideGroupMembers()" aria-label="グループチャットへ戻る">＜</button><div class="members-heading"><button type="button" class="group-members-avatar" onclick="openGroupImage(this)" aria-label="グループ画像を拡大"><img src="history-icons/group-chat.png?v=timemachine1" alt=""></button><h2 class="members-title"><button type="button" id="group-settings-name" onclick="renameGroupChat()" aria-label="グループ名を変更">グループチャット</button><span id="group-member-heading">(113)</span></h2></div></header><div class="members-scroll"><p id="group-member-error" class="member-error" role="alert" hidden></p><div id="group-member-list"></div></div><input id="group-avatar-input" type="file" accept="image/*" hidden></div></section>
 <!-- PROFILE MODAL -->
 
 <div id="profile-modal" class="hidden"></div>
@@ -3866,6 +3921,29 @@ const HISTORY_PAGE_PAIRS=40;
 // 全履歴はIndexedDBに残り、画面でも「過去の会話を表示」から遡れる。
 const AI_CONTEXT_MAX_PAIRS=10,AI_CONTEXT_MAX_CHARS=11000;
 const CHAT_DB_NAME="himiko-conversations-v1",CHAT_DB_STORE="conversations";
+const himikoPersonalTalkedTo = new Set();
+function updatePersonalTalkCount(list){
+  const count=list.filter(p=>himikoPersonalTalkedTo.has(Number(p.id))).length;
+  const label=document.querySelector('#filter-count .filter-count-text');
+  if(label)label.textContent=`${list.length}人いるよ（会話しているのは${count}人）`;
+}
+function updatePersonalTalkedStatus(id,record){
+  const completed=Array.isArray(record?.turns)&&record.turns.some(t=>t.role==='user')&&record.turns.some(t=>t.role==='assistant');
+  if(completed)himikoPersonalTalkedTo.add(Number(id));
+  else himikoPersonalTalkedTo.delete(Number(id));
+  if(!document.getElementById('list-view')?.classList.contains('hidden'))renderCards();
+}
+function reloadPersonalTalkHistory(){
+  openChatDB().then(db=>new Promise((resolve,reject)=>{
+    const req=db.transaction(CHAT_DB_STORE,'readonly').objectStore(CHAT_DB_STORE).getAll();
+    req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+  })).then(records=>{
+    himikoPersonalTalkedTo.clear();
+    for(const record of records)if(Array.isArray(record.turns)&&record.turns.some(t=>t.role==='user')&&record.turns.some(t=>t.role==='assistant'))himikoPersonalTalkedTo.add(Number(record.id));
+    renderCards();
+  }).catch(()=>{});
+}
+
 let chatDbPromise=null,chatWrites=Promise.resolve();
 function setChatStorageStatus(text,state="ok"){
   const el=document.getElementById("chat-storage-status");
@@ -3921,7 +3999,7 @@ function writeSavedChat(id,record){
     });
   });
   chatWrites=operation;
-  return operation;
+  return operation.then(value=>{updatePersonalTalkedStatus(id,record);return value});
 }
 function completedChatTurns(source=messages){
   const result=[];
@@ -4130,7 +4208,7 @@ function renderCards(){
  const q=document.getElementById('search-input').value.trim().toLowerCase();
  let list=allChars.filter(ch=>Object.entries(selectedFilters).every(([group,set])=>!set.size||[...set].some(key=>matchesGroup(ch,group,key))));
  if(q)list=list.filter(c=>c.name.toLowerCase().includes(q)||(c.aliases||[]).some(name=>name.toLowerCase().includes(q))||c.period.toLowerCase().includes(q)||c.catchphrase.toLowerCase().includes(q));
- document.querySelector('#filter-count .filter-count-text').textContent=`${list.length}人いる${document.documentElement.dataset.persona==='cyber'?'ぜ':'にゃ'}`;
+ updatePersonalTalkCount(list);
   const el=document.getElementById("card-list");
   if(!list.length){el.innerHTML=`<div class="empty-state"><div style="font-size:36px;margin-bottom:10px">🔍</div><div style="font-weight:700">${himikoUi('該当する人物が見つからないにゃ','該当する人物が見つからないぜ')}</div></div>`;return;}
 
@@ -4139,7 +4217,7 @@ function renderCards(){
     const bdr=ai?`border-color:${ch.color}80;box-shadow:0 4px 18px ${ch.color}25`:"";
     const anim=ai?`animation:float 3s ease-in-out infinite`:"";
     const hasNarrator=ch.isExplainer||ch.isNarrator;
-    return`<button class="char-card" onclick="openChat(${ch.id})" style="animation-delay:${Math.min(i*0.03,0.4)}s;${bdr}">
+    return`<button class="char-card ${himikoPersonalTalkedTo.has(Number(ch.id))?'group-met':''}" onclick="openChat(${ch.id})" style="animation-delay:${Math.min(i*0.03,0.4)}s;${bdr}">
       <div class="card-inner">
         <div class="avatar" style="background:linear-gradient(135deg,${ch.color},${ch.accent});${anim}">
           ${historyAvatarHTML(ch)}${ai?`<div class="online-dot"></div>`:""}
@@ -4696,8 +4774,7 @@ function showProfile(person=currentChar){
   modal.classList.remove("hidden");
 }
 
-function openProfileImage(){const source=document.querySelector('#profile-modal .history-profile-avatar img');if(source)openChatImage((source.currentSrc||source.src).replace(/\.webp(?=\?|$)/,'.png'),(profileCharacter?.name||'人物')+'の画像',document.querySelector('#profile-modal .history-profile-avatar'));}
-function openGroupImage(trigger){openChatImage('history-icons/group-chat.png?v=timemachine1','グループの画像',trigger);}
+function openProfileImage(){const source=document.querySelector('#profile-modal .history-profile-avatar img');if(source)openChatImage(source.currentSrc||source.src,(profileCharacter?.name||'人物')+'の画像',document.querySelector('#profile-modal .history-profile-avatar'));}
 function openChatImage(src,alt,trigger){
  const view=document.createElement('div');view.className='profile-image-view';view.setAttribute('role','dialog');view.setAttribute('aria-modal','true');view.setAttribute('aria-label',alt);const img=document.createElement('img');img.src=src;img.alt=alt;const close=document.createElement('button');close.type='button';close.className='profile-image-close';close.setAttribute('aria-label','画像を閉じる');close.textContent='×';const dismiss=()=>{document.removeEventListener('keydown',onkey);view.remove();trigger?.focus()};const onkey=e=>{if(e.key==='Escape')dismiss();if(e.key==='Tab'){e.preventDefault();close.focus()}};close.onclick=dismiss;view.onclick=e=>{if(e.target===view)dismiss()};view.append(img,close);document.body.append(view);document.addEventListener('keydown',onkey);close.focus();
 }
@@ -4723,12 +4800,11 @@ window.addEventListener('message', event => {
   window.himikoReturnToMembers = null;
   listScrollY = 0;
   if (!document.getElementById('chat-view').classList.contains('hidden')) showList();
-  if (!document.getElementById('group-view').hidden) window.closeGroupChat();
   const top = () => { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; };
   top(); requestAnimationFrame(top); setTimeout(top, 80);
 });
 
-renderTags();renderCards();syncHimikoPrompt();setChatStorageStatus('会話を読み込み中…');
+renderTags();renderCards();syncHimikoPrompt();setChatStorageStatus('会話を読み込み中…');reloadPersonalTalkHistory();
 
 // iOS Safariの慣性スクロールやプログラムによるscrollイベントは、
 // 「読書中のユーザーが最下部に戻った」根拠にしない。
@@ -4797,7 +4873,7 @@ document.getElementById("chat-view").addEventListener("click",function(e){
   // Both the personal and group composers live inside the iframe. Tell the parent
   // about either keyboard focus so its visualViewport sizing keeps the composer
   // directly above the iPhone keyboard instead of leaving it offscreen.
-  const inputs=['msg-input','group-input'].map(id=>document.getElementById(id)).filter(Boolean);
+  const inputs=['msg-input'].map(id=>document.getElementById(id)).filter(Boolean);
   const tell=active=>{if(window.parent!==window)window.parent.postMessage({type:'himiko-input-focus',active},location.origin)};
   for(const input of inputs){
     input.addEventListener('focus',()=>tell(true));
@@ -4810,7 +4886,7 @@ document.getElementById("chat-view").addEventListener("click",function(e){
 })();
 </script><script id="chat-autoexpand-input-script">
 (()=>{
- for(const id of ['msg-input','group-input']){
+ for(const id of ['msg-input']){
   const el=document.getElementById(id);if(!el)continue;let last=null,lastWidth=0;
   function resize(){if(!el.isConnected||!el.clientWidth)return;const value=el.value,width=el.clientWidth;if(value===last&&width===lastWidth)return;last=value;lastWidth=width;el.style.height='44px';const height=Math.min(124,Math.max(44,el.scrollHeight+el.offsetHeight-el.clientHeight));el.style.height=height+'px';}
   el.addEventListener('input',resize);el.addEventListener('focus',()=>{last=null;resize()});
@@ -4968,264 +5044,10 @@ document.getElementById("chat-view").addEventListener("click",function(e){
 })();
 </script>
 
-<script>
-(()=>{
- const KEY='himiko-group-v1', SEEN='himiko-met-v1';let lastUserMessageAt=0,state={name:'異次元グルチャ',turns:[]}, busy=false,epoch=0,timer=null,groupListScroll=0,groupReveal=null;let unreadEntryPending=false,unreadEntryKey=null;
- const $=id=>document.getElementById(id), ch=id=>allHistoryChars.find(p=>p.id===id), safe=t=>esc(String(t));
- function cleanSpeakerLabel(text,name){const escaped=String(name).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');return String(text).replace(new RegExp('^\\s*(?:【'+escaped+'】\\s*[：:]?|'+escaped+'\\s*[：:])\\s*'),'').trim()}
- function load(){if(busy)return;try{const a=JSON.parse(localStorage.getItem(KEY)||'null');if(a&&typeof a.name==='string'&&Array.isArray(a.turns))state={name:(a.name==='グループチャット'?'異次元グルチャ':a.name).slice(0,30),turns:a.turns.slice(-100)};}catch{}}
- function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch{$('group-status').textContent='会話を保存できません';$('group-status').hidden=false;}}
- function seen(){try{return new Set(JSON.parse(localStorage.getItem(SEEN)||'[]').filter(Number.isInteger));}catch{return new Set()}}
- function mark(ids){const x=seen();ids.forEach(v=>x.add(v));try{localStorage.setItem(SEEN,JSON.stringify([...x]))}catch{} }
- function avatar(p){return `<span class="avatar" style="background:linear-gradient(135deg,${p.color},${p.accent})">${historyAvatarHTML(p)}</span>`}
 
- // Use the same per-person presence as the member list; receipts accumulate by ID.
- function memberAt(id,at){let present=true;for(const e of [...(inboxData?.membership?.events||[])].sort((a,b)=>a.at-b.at)){if(e.id===id&&e.at<=at)present=e.event!=='leave';}return present;}
- function readCount(at,now=Date.now()){
-  const turn=state.turns.find(t=>!t.automatic&&Number(t.at)===Number(at));
-  if(!turn||turn.error||!window.himikoPersonPresence||now<Number(at))return 0;
-  if(!Array.isArray(turn.readerIds)&&turn.receiptLegacyCount===undefined)turn.receiptLegacyCount=Math.max(0,Math.min(allChars.filter(p=>memberAt(p.id,Number(at))).length,Number(turn.readCount)||0));
-  const absent=groupAbsentMembers();
-  const before=JSON.stringify([turn.readerIds,turn.readerCandidates,turn.readCount]);
-  // Keep historical readers even after they leave the current member roster.
-  const readers=new Set((turn.readerIds||[]).filter(id=>allHistoryChars.some(p=>p.id===id)));
-  const candidates=turn.readerCandidates||{};
-  // A speaker reads shortly before their first scheduled reply, including on resume.
-  for(const item of timedItems({...turn,replies:turn.replies||[]})){if(absent.has(item.person.id)||!memberAt(item.person.id,Number(at))||!item.first||item.reply?.event||!Number(item.due)||now<Math.max(Number(turn.at),Number(item.due)-15000))continue;readers.add(item.person.id);window.dispatchEvent(new CustomEvent('himiko-group-speaker',{detail:{id:item.person.id,at:Math.min(now,Number(item.due))}}));}
-  if(now-Number(turn.receiptLastCheck||0)>120000)for(const id of Object.keys(candidates))delete candidates[id];
-  const hour=new Date(now+9*3600000).getUTCHours(),night=hour<7||hour>=23;
-  for(const person of allChars){
-   if(absent.has(person.id)||!memberAt(person.id,Number(at))){delete candidates[person.id];continue;}
-   if(readers.has(person.id))continue;
-   if(window.himikoPersonPresence(person,now).label!=='オンライン'){delete candidates[person.id];continue;}
-   const start=Number(candidates[person.id])||now;candidates[person.id]=start;
-   const jitter=(Math.imul(person.id+1,2654435761)^Math.floor(Number(at)/1000))>>>0;
-   const delay=night?30000+jitter%150001:8000+jitter%82001;
-   if(now-start>=delay){readers.add(person.id);delete candidates[person.id];}
-  }
-  turn.readerIds=[...readers];turn.readerCandidates=candidates;turn.readCount=Math.max(Number(turn.receiptLegacyCount)||0,readers.size);turn.receiptLastCheck=now;
-  if(before!==JSON.stringify([turn.readerIds,turn.readerCandidates,turn.readCount]))save();
-  return turn.readCount;
- }
- function groupCanType(turn=state.turns.findLast(t=>!t.automatic&&!t.error)){return !turn||(!turn.error&&readCount(turn.at)>0)}
- function refreshPendingDots(){if(!groupRequest||$('group-view').hidden)return;const turn=state.turns.find(t=>t.requestId===groupRequest);if(turn&&Number(turn.firstReplyAt)-Date.now()<=15000&&groupCanType(turn)){if(!$('group-typing'))groupAppend(groupTyping(null),groupFollow())}else $('group-typing')?.remove();}
- function groupReadMeta(at){const count=readCount(at);return at?`<span class="history-message-time">${count?'既読 '+count+'<br>':''}${esc(historyClock(at))}</span>`:''}
-
- function refreshReadCounts(){
-  if($('group-view').hidden)return;
-  const rows=[...$('group-messages-inner').querySelectorAll('[data-group-sent-at]')];
-  for(const row of rows){const at=Number(row.dataset.groupSentAt),count=readCount(at);const time=row.querySelector('.history-message-time');if(time)time.innerHTML=(count?'既読 '+count+'<br>':'')+esc(historyClock(at));}
- }
- function planLocalReplies(replies,firstAt=Date.now()+120000+Math.floor(Math.random()*360001)){
-  let at=Math.max(Date.now()+10000,firstAt);
-  // Sometimes another person joins after a few minutes; short exchanges still remain common.
-  const possible=replies.map((r,i)=>i>=2&&r.id!==replies[i-1].id?i:-1).filter(i=>i>=0);
-  const pauseIndex=possible.length&&Math.random()<0.4?possible[Math.floor(Math.random()*possible.length)]:-1;
-  return replies.map((r,i)=>{if(i){at+=Math.min(12000,4000+String(replies[i-1].text).length*60)+Math.floor(Math.random()*2001)+(replies[i-1].id===r.id?0:2000);if(i===pauseIndex)at+=120000+Math.floor(Math.random()*240001);}const result={...r,at,scheduledAt:at};return result;});
- }
- function cancelWaitingReplies(){
-  for(const t of state.turns){if(t.automatic||t.pending||t.questionsReady!==false)continue;const visible=Number(t.visibleCount)||0;const items=revealItems(t.replies).slice(0,visible),kept=[];
-   for(const item of items){let r=kept.find(r=>r.source===item.reply);if(!r){r={...item.reply,text:'',source:item.reply};kept.push(r)}r.text+=(r.text?'\n\n':'')+item.text;}
-   t.replies=kept.map(({source,...r})=>r);t.questionsReady=true;t.suggestions=[];t.interrupted=true;
-  }
-  clearTimeout(timer);groupReveal=null;busy=false;$('group-typing')?.remove();save();
- }
- function scheduleReveal(){
-  const reveal=groupReveal;if(!reveal||reveal.epoch!==epoch)return;
-  const item=reveal.items[reveal.index];if(!item){groupFinish(true);return}
-  reveal.turn.deliveryDue=reveal.items.map(x=>x.due);save();
-  const wait=Math.max(0,(item.due||Date.now())-Date.now());
-  const quiet=wait>15000;
-  busy=!quiet;updateGroupSend();$('group-typing')?.remove();
-  if(!quiet&&!groupCanType(reveal.turn.automatic?undefined:reveal.turn)){timer=setTimeout(scheduleReveal,Math.min(500,wait||500));return;}
-  if(!quiet&&!item.reply?.event){groupAppend(groupTyping(item.person),groupFollow());const typing=$('group-typing');typing?.setAttribute('aria-label',item.person.name+'が入力中');}
-  timer=setTimeout(quiet?scheduleReveal:revealNext,quiet?Math.min(60000,wait-10000):wait);
- }
- let groupQuote=null;
- function groupBubbleId(id,text,at){let hash=2166136261;for(const c of String(id)+':'+String(at||0)+':'+text)hash=Math.imul(hash^c.charCodeAt(0),16777619);return 'group-bubble-'+(hash>>>0)}
- function replyQuote(reply){const q=reply?.quote;if(!q)return null;if(q.kind==='older-question')return q;const turn=state.turns.find(t=>(t.replies||[]).includes(reply));return turn&&q.name==='あなた'&&q.text===turn.question?null:q;}
- function quoteHTML(q){return q?`<button type="button" class="group-quote" data-quote-jump="${escAttr(q.target||'')}"><strong>${safe(q.name)}</strong><span>${safe(q.text.slice(0,200))}</span></button>`:''}
- function setGroupQuote(q){groupQuote=q;const box=$('group-quote-draft');if(!box)return;box.hidden=!q;box.innerHTML=q?quoteHTML(q)+'<button type="button" id="group-quote-cancel" aria-label="引用を解除">×</button>':'';}
- $('group-form').addEventListener('click',e=>{if(e.target.closest('#group-quote-cancel'))setGroupQuote(null)});
- $('group-messages').addEventListener('click',e=>{const jump=e.target.closest('[data-quote-jump]');if(jump){const target=$(jump.dataset.quoteJump);if(target){target.scrollIntoView({block:'center',behavior:'smooth'});target.classList.add('quote-highlight');setTimeout(()=>target.classList.remove('quote-highlight'),1500)}return;}const bubble=e.target.closest('[data-group-quote-text]');if(!bubble||window.getSelection()?.toString())return;setGroupQuote({name:bubble.dataset.groupQuoteName,text:bubble.dataset.groupQuoteText,target:bubble.id});$('group-input').focus();});
- function rowUser(text,at=null,read=false,failed=false,quote=null){return `<div class="bubble-row user is-new" data-group-timeline-at="${Number(at)||0}" data-group-sent-at="${Number(at)||Date.now()}"><div id="${groupBubbleId('user',text,at)}" class="bubble user" data-group-quote-name="あなた" data-group-quote-text="${escAttr(text)}">${quoteHTML(quote)}${safe(text)}</div>${failed?'':groupReadMeta(at)}</div>`}
- function rowReplyPart(p,text,first,animate=false,meta={}){if(meta.reply?.event){
- const event=meta.reply.event,legacy=String(text).match(/（([\s\S]*)）$/),reason=meta.reply.reason||(legacy?legacy[1]:'');
- const label=String(text).replace(/（[\s\S]*）$/,'').replace('グループを退出しました','グループを退会しました');
- const notice=`<div class="group-system-event" data-group-timeline-at="${Number(meta.at)||0}" data-group-event="${escAttr(event)}" data-group-event-person="${Number(meta.reply.targetId||p.id)}" ${meta.key?`data-inbox-key="${escAttr(meta.key)}"`:''}><span>${meta.at?`<time>${safe(historyClock(meta.at))}</time>`:''}<span class="group-event-label">${safe(label)}</span></span></div>`;
- const speech=reason?rowReplyPart(p,reason,true,animate,{at:meta.at}):'';
- return ['leave','away','invite'].includes(event)?speech+notice:notice+speech;
-}const at=Number(meta.due||meta.at||meta.reply?.at);if(at&&at<=Date.now()&&at>Date.now()-600000)window.dispatchEvent(new CustomEvent('himiko-group-speaker',{detail:{id:p.id,at}}));return `<div data-group-timeline-at="${Number(meta.at||meta.reply?.at)||0}" ${meta.key?`data-inbox-key="${escAttr(meta.key)}"`:""} class="bubble-row assistant${first?'':' continuation'}${animate?' is-new':''}">${first?`<button type="button" class="bubble-avatar group-person-avatar" data-id="${p.id}" aria-label="${safe(p.name)}のプロフィールを見る" style="background:linear-gradient(135deg,${p.color},${p.accent})">${historyAvatarHTML(p)}</button>`:'<div class="bubble-avatar-spacer" aria-hidden="true"></div>'}<div class="group-reply-content">${first?`<div class="group-reply-name"><span class="group-name-label">${safe(p.name)}${p.isNarrator||p.isExplainer?'（解説）':''}${p.isSpecial||!p.period?'':` <span class="group-reply-period">（${safe(p.period.replace(/[（(]/g,'・').replace(/[）)]/g,''))}）</span>`}</span></div>`:''}<div id="${groupBubbleId(p.id,text,meta.at||meta.reply?.at)}" class="bubble assistant" data-group-quote-name="${escAttr(p.name)}" data-group-quote-text="${escAttr(text)}">${first?quoteHTML(replyQuote(meta.reply)):''}${safe(cleanSpeakerLabel(text,p.name))}</div>${historyMeta(meta.at)}</div></div>`}
- function rowReply(x){const p=ch(x.id);if(!p)return '';return `<div class="bubble-group">${splitReplyBubbles(x.text).map((part,i)=>rowReplyPart(p,part,i===0)).join('')}</div>`}
- function groupTyping(p){const color=p?.color||'#6b90a8';return `<div id="group-typing" class="bubble-row assistant typing-row" role="status" aria-label="次のメッセージを準備中"><div class="bubble-avatar-spacer" aria-hidden="true"></div><div class="typing">${[0,.2,.4].map(d=>`<span class="typing-dot" style="background:${color};animation-delay:${d}s"></span>`).join('')}</div></div>`}
- function groupFollow(){const scroller=$('group-messages');return scroller.scrollHeight-scroller.scrollTop-scroller.clientHeight<120}
- function normalizeGroupTimeline(){
-  const box=$('group-messages-inner');
-  const rows=[...box.children].filter(el=>el.hasAttribute('data-group-timeline-at'));
-  rows.sort((a,b)=>Number(a.dataset.groupTimelineAt)-Number(b.dataset.groupTimelineAt));
-  const keys=new Set(),membership=new Map(),kept=[];
-  for(const row of rows){
-    const key=row.dataset.inboxKey;
-    if(key&&keys.has(key)){row.remove();continue;}
-    if(key)keys.add(key);
-    const event=row.dataset.groupEvent,person=row.dataset.groupEventPerson;
-    if(event==='join'||event==='leave'){
-      if(membership.get(person)===event){row.remove();continue;}
-      membership.set(person,event);
-    }
-    kept.push(row);
-  }
-  box.querySelectorAll(':scope > .history-day').forEach(el=>el.remove());
-  const divider=$('group-unread-divider');if(divider)divider.remove();
-  const tail=box.querySelector(':scope > .group-examples, :scope > #group-typing');
-  let lastAt=null;
-  for(const row of kept){
-    const at=Number(row.dataset.groupTimelineAt);
-    const day=historyDateHTML(at,lastAt);
-    if(day){const holder=document.createElement('template');holder.innerHTML=day;box.insertBefore(holder.content,tail);}
-    if(divider&&row.dataset.inboxKey===unreadEntryKey)box.insertBefore(divider,tail);
-    box.insertBefore(row,tail);lastAt=at||lastAt;
-  }
- }
- function groupAppend(markup,follow){const box=$('group-messages-inner'),scroller=$('group-messages'),top=scroller.scrollTop;box.insertAdjacentHTML('beforeend',markup);normalizeGroupTimeline();if(follow)scroller.scrollTop=scroller.scrollHeight;else scroller.scrollTop=top}
- function revealItems(replies){const items=[];let due=0;for(const reply of replies){const person=ch(reply.id);if(person){const parts=reply.event?[reply.text]:splitReplyBubbles(reply.text);parts.forEach((text,i)=>{due=Math.max(due,reply.scheduledAt||reply.at||0);if(i)due+=10000;items.push({person,text,reply,partIndex:i,first:i===0,due,at:reply.chunkTimes?.[i]||reply.at,key:i===parts.length-1?reply.key:null})})}}return items}
- function timedItems(turn){return revealItems(turn.replies).map((item,i)=>({...item,due:turn.deliveryDue?.[i]||item.due}))}
- function advanceClosedReplies(){
-  if(!$('group-view').hidden)return;
-  let changed=false;
-  for(const turn of state.turns){if(turn.automatic||turn.pending||turn.questionsReady!==false)continue;
-   const items=timedItems(turn);let index=Number(turn.visibleCount)||0;
-   while(index<items.length&&items[index].due<=Date.now()){
-    const item=items[index++];item.reply.chunkTimes||=[];item.reply.chunkTimes[item.partIndex]=item.due;turn.closedUnread=(Number(turn.closedUnread)||0)+1;changed=true;
-   }
-   turn.visibleCount=index;if(index===items.length){turn.questionsReady=true;turn.questionsAt=(items.at(-1)?.due||Date.now())+10000;changed=true;}
-  }
-  if(changed)save();
- }
- function groupFinish(complete=false){clearTimeout(timer);timer=null;$('group-typing')?.remove();if(complete&&groupReveal){groupReveal.turn.questionsReady=true;groupReveal.turn.questionsAt=Date.now()+10000;save()}groupReveal=null;busy=false;updateGroupSend();appendGroupSuggestions()}
- function revealNext(){const reveal=groupReveal;if(!reveal||reveal.epoch!==epoch)return;const follow=groupFollow();$('group-typing')?.remove();if(reveal.index>=reveal.items.length){groupFinish(true);return}const upcoming=reveal.items[reveal.index];if(!upcoming.reply?.event&&groupAbsentMembers().has(upcoming.person.id)){
- if(reveal.turn.automatic){reveal.index++;reveal.turn.visibleCount=reveal.index;save();scheduleReveal();return;}
- if(reveal.rejoining)return;reveal.rejoining=true;
- fetch('/api/himiko-inbox',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(localStorage.getItem('himiko-inbox-token-v1')||'')},body:JSON.stringify({action:'rejoin',ids:[upcoming.person.id]})}).then(async r=>{const d=await r.json();if(!r.ok)throw Error();receiveInbox(d);}).catch(()=>{}).finally(()=>{reveal.rejoining=false;if(groupReveal===reveal)timer=setTimeout(revealNext,1000)});return;
- }const item=reveal.items[reveal.index++];if(!reveal.turn.automatic){item.at=Date.now();item.reply.chunkTimes||=[];item.reply.chunkTimes[item.partIndex]=item.at;}groupAppend(rowReplyPart(item.person,item.text,item.first,true,{...item,at:item.at||Date.now()}),follow);playReceiveSound();reveal.turn.visibleCount=reveal.index;syncGroupName();save();const next=reveal.items[reveal.index];if(next)next.due=Math.max(next.due||0,Date.now()+Math.min(14000,4000+String(item.text).length*60)+Math.floor(Math.random()*2001));scheduleReveal()}
- function startGroupReveal(replies,current,turn=state.turns.at(-1)){clearTimeout(timer);const items=timedItems(turn);if(!items.length){groupFinish();return}const index=Math.max(0,Math.min(items.length,Number(turn.visibleCount)||0));groupReveal={items,index,epoch:current,turn};scheduleReveal()}
- const examples=['織田信長と豊臣秀吉は何が違うの？','鎌倉幕府と室町幕府はどう違うの？','聖徳太子はどんな政治をしたの？','江戸幕府はどうして長く続いたの？','明治維新で日本はどう変わったの？','戦国時代を終わらせたのは誰？','卑弥呼の時代の暮らしを教えて！','革命によって社会はどう変わったの？','日本と世界の歴史はどうつながっているの？','入試に出やすい歴史のつながりを教えて！'];
- function groupQuestions(values,answers=false){const asked=new Set(state.turns.map(t=>t.question));const unique=[...new Set((Array.isArray(values)?values:[]).filter(q=>typeof q==='string').map(q=>q.trim()).filter(q=>q&&q.length<=100&&(answers||!asked.has(q))))];return unique.slice(0,3)}
- function groupQuestionHTML(questions){const answers=state.turns.at(-1)?.suggestionKind==='answers';return `<div class="suggestions group-examples" aria-label="${answers?'返答の例':'次の質問候補'}">${answers?'<div class="suggestions-label">返答の例</div>':''}<div class="suggestions-list">${questions.map(q=>`<button type="button" class="suggestion-btn" data-group-question="${escAttr(q)}">${safe(q)}</button>`).join('')}</div></div>`}
- // Group suggestions are only an entry point before the first conversation.
- function appendGroupSuggestions(){
-  if(state.turns.length)$('group-messages-inner').querySelector('.group-examples')?.remove();
- }
- function refreshGroupSuggestions(){appendGroupSuggestions();}
- function render(){const scroller=$('group-messages'),priorTop=scroller.scrollTop,follow=groupFollow();if(unreadEntryPending&&inboxData){unreadEntryKey=state.turns.flatMap(t=>t.replies||[]).find(r=>r.key&&!acknowledgedKeys.has(r.key))?.key||null;unreadEntryPending=false;}let lastAt=null;let h=state.turns.length?'':groupQuestionHTML(examples);for(const t of state.turns){if(typeof t.question!=='string'||!Array.isArray(t.replies))continue;h+=historyDateHTML(t.at||t.replies[0]?.at,lastAt);lastAt=t.at||t.replies.at(-1)?.at||lastAt;if(!t.automatic)h+=rowUser(t.question,t.at,t.read,!!t.error,t.quote)+(t.error?`<div class="group-send-failed" data-group-timeline-at="${Number(t.at)||0}"><span>送信できませんでした</span><button type="button" data-group-retry="${escAttr(t.requestId)}" aria-label="再試行" title="再試行"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 3v6h-6"/><path d="M21 9a9 9 0 1 0 .1 5"/></svg></button></div>`:'');const items=revealItems(t.replies);const visible=t.questionsReady===false?Math.max(0,Number(t.visibleCount)||0):items.length;h+=items.slice(0,visible).map(item=>((item.first&&item.reply.key===unreadEntryKey)?'<div id="group-unread-divider" role="separator" aria-label="ここから未読メッセージ">ここから未読メッセージ</div>':'')+rowReplyPart(item.person,item.text,item.first,false,item)).join('')}$('group-messages-inner').innerHTML=h;normalizeGroupTimeline();const divider=$('group-unread-divider');if(unreadEntryKey&&divider&&!scroller.dataset.unreadAnchored){scroller.scrollTop+=divider.getBoundingClientRect().top-scroller.getBoundingClientRect().top-12;scroller.dataset.unreadAnchored='true';}else if(unreadEntryPending||(!follow&&scroller.dataset.unreadAnchored))scroller.scrollTop=priorTop;else scroller.scrollTop=state.turns.length?scroller.scrollHeight:0;syncGroupName();updateGroupSend();refreshReadCounts();if(state.turns.length)appendGroupSuggestions()}
-
- function refreshGroupPreview(){
-  const label=document.querySelector('#list-view .group-caption-text');if(!label)return;
-  const now=Date.now();let latest=null;
-  function offer(text,at){if(typeof text!=='string'||!text.trim()||!Number.isFinite(Number(at))||Number(at)>now)return;if(!latest||Number(at)>=latest.at)latest={text,at:Number(at)};}
-  for(const turn of state.turns){
-   if(!turn.automatic)offer(turn.question,turn.at);
-   const items=timedItems(turn),visible=turn.questionsReady===false?Math.max(0,Number(turn.visibleCount)||0):items.length;
-   for(const item of items.slice(0,visible))if(!item.due||item.due<=now)offer(item.text,item.at||item.due||turn.at);
-  }
-  for(const batch of inboxData?.batches||[])for(const reply of batch.replies||[])offer(reply.text,reply.at);
-  label.textContent=latest?'💬 '+latest.text.replace(/\s+/g,' ').trim():'みんなで楽しい異次元の会話';
- }
- function groupAbsentMembers(){if(inboxData?.membership)return new Set(inboxData.membership.absentIds);const absent=new Set();for(const t of state.turns){if(t.interrupted)continue;const items=revealItems(t.replies||[]);for(const item of items.slice(0,t.questionsReady===false?Number(t.visibleCount)||0:items.length)){if(item.reply.event==='leave'&&allChars.some(p=>p.id===item.reply.targetId))absent.add(item.reply.targetId);if(item.reply.event==='join')absent.delete(item.reply.targetId);}}return absent;}
- function syncGroupName(){const absent=groupAbsentMembers();const count=allChars.length+1-absent.size;$('group-count').textContent='('+count+')';$('group-member-heading').textContent='('+count+')';refreshGroupPreview();$('group-title').textContent=state.name;$('group-settings-name').textContent=state.name;document.querySelector('#list-view .group-chat-title').textContent=state.name+' ('+count+')'}
- function updateGroupSend(){$('group-send').disabled=!!groupRequest||(busy&&!groupReveal)||!$('group-input').value.trim();$('group-reset').disabled=!busy&&!state.turns.length}
- $('group-input').addEventListener('input',updateGroupSend);
- $('group-messages').addEventListener('click',e=>{const b=e.target.closest('[data-group-question]');if(!b||(busy&&!groupReveal))return;$('group-input').value=b.dataset.groupQuestion||'';updateGroupSend();$('group-form').requestSubmit()});
- window.openGroupChat=()=>{if(!$('group-view').hidden)return;unreadEntryPending=true;unreadEntryKey=null;delete $('group-messages').dataset.unreadAnchored;load();epoch++;groupListScroll=window.scrollY||document.documentElement.scrollTop||document.body.scrollTop||0;document.documentElement.dataset.groupOpen='true';$('list-view').classList.add('hidden');$('group-view').hidden=false;$('group-count').textContent='('+(allChars.length+1)+')';$('group-member-heading').textContent='('+(allChars.length+1)+')';document.documentElement.dataset.chatOpen='true';if(window.parent!==window)window.parent.postMessage({type:'himiko-chat-state',open:true},location.origin);state.turns.forEach(t=>t.closedUnread=0);save();render();refreshGroupUnread();presence();inboxAction('poll');const pending=state.turns.findLast(t=>t.questionsReady===false);if(pending&&!pending.pending)startGroupReveal(pending.replies,epoch,pending);deliverPendingGroup();};
- window.closeGroupChat=()=>{if(groupReveal){groupReveal.turn.deliveryDue=groupReveal.items.map(x=>x.due);save();}inboxAction('presence',{active:false});epoch++;clearTimeout(timer);groupReveal=null;busy=false;updateGroupSend();$('group-view').hidden=true;$('group-members').hidden=true;$('group-participant-strip').hidden=true;$('group-header-avatar').setAttribute('aria-expanded','false');$('group-title').setAttribute('aria-expanded','false');$('group-count').setAttribute('aria-expanded','false');delete document.documentElement.dataset.membersOpen;delete document.documentElement.dataset.stripOpen;delete document.documentElement.dataset.groupOpen;delete document.documentElement.dataset.chatOpen;$('list-view').classList.remove('hidden');window.scrollTo(0,groupListScroll);document.body.scrollTop=groupListScroll;document.documentElement.scrollTop=groupListScroll;if(window.parent!==window)window.parent.postMessage({type:'himiko-chat-state',open:false},location.origin);syncGroupName();renderCards();};
- window.resetGroupChat=()=>{if(!state.turns.length&&!busy)return;if(!confirm('このグループの会話をリセットしますか？'))return;epoch++;clearTimeout(timer);timer=null;groupReveal=null;busy=false;inboxAction('reset');state.turns=[];setGroupQuote(null);$('group-input').value='';$('group-status').hidden=true;save();render();updateGroupSend()};
- window.renameGroupChat=()=>{const n=prompt('グループ名を入力してください（30文字まで）',state.name);if(n===null)return;if(n.trim()){state.name=n.trim().slice(0,30);save();syncGroupName();}};
- const AVATAR_KEY='himiko-group-avatar-v1';
- function ownAvatar(){try{const url=localStorage.getItem(AVATAR_KEY)||'';if(/^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(url))return `<img src="${url}" alt="">`;}catch{}return '👤'}
- function groupSelfName(){try{const input=window.parent.document.getElementById('reportNameInput');if(input&&typeof input.value==='string'&&input.value.trim())return input.value.trim().slice(0,24)}catch{}return 'あなた'}
- function updateStripFade(){const el=$('group-participant-icons');el.classList.toggle('has-more-right',el.scrollWidth-el.scrollLeft-el.clientWidth>2)}
- $('group-participant-icons').addEventListener('scroll',updateStripFade,{passive:true});window.addEventListener('resize',updateStripFade,{passive:true});
- function renderParticipantStrip(){$('group-participant-icons').innerHTML=`<button type="button" data-self="1" aria-label="${escAttr(groupSelfName())}のアイコンを変更"><span class="avatar self-avatar">${ownAvatar()}</span></button>`+allChars.filter(p=>!groupAbsentMembers().has(p.id)).map(p=>`<button type="button" data-id="${p.id}" aria-label="${escAttr(p.name)}の個別チャットへ">${avatar(p)}</button>`).join('')}
- window.toggleGroupParticipants=()=>{const open=$('group-participant-strip').hidden;if(open)renderParticipantStrip();$('group-participant-strip').hidden=!open;$('group-header-avatar').setAttribute('aria-expanded',String(open));$('group-title').setAttribute('aria-expanded',String(open));$('group-count').setAttribute('aria-expanded',String(open));if(open){document.documentElement.dataset.stripOpen='true';requestAnimationFrame(updateStripFade)}else delete document.documentElement.dataset.stripOpen;};
- function renderMembers(){const self=`<button type="button" class="char-card member-card" data-self="1" aria-label="${escAttr(groupSelfName())}のアイコンを変更"><span class="card-inner"><span class="avatar self-avatar">${ownAvatar()}</span><span class="card-info"><span class="member-name">${safe(groupSelfName())}</span></span></span></button>`;const absent=groupAbsentMembers();const card=p=>`<button class="char-card member-card" type="button" data-id="${p.id}" data-left="${absent.has(p.id)}"><span class="card-inner">${avatar(p)}<span class="card-info"><span class="member-name-row"><span class="member-name" title="${escAttr(p.name)}">${safe(p.name)}</span>${window.himikoPersonPresence?(()=>{const v=window.himikoPersonPresence(p);return `<span class="online-badge member-presence" style="color:${v.color};background:${v.color}20">${safe(v.label)}</span>`})():''}</span>${p.isSpecial||!p.period?'':` <span class="member-period">（${safe(p.period.replace(/[（(]/g,'・').replace(/[）)]/g,''))}）</span>`}</span></span></button>`;
- const left=allChars.filter(p=>absent.has(p.id)),active=allChars.filter(p=>!absent.has(p.id));
- $('group-member-list').innerHTML=`<h3 class="membership-section-title"><span aria-hidden="true">🚪</span> ${left.length}人が退会中です</h3>`+(left.length?left.map(card).join(''):'')+`<h3 class="membership-section-title"><span aria-hidden="true">👋</span> ${active.length+1}人が参加中です</h3>`+self+active.map(card).join('');} 
- window.showGroupMembers=()=>{syncGroupName();renderMembers();$('group-member-error').hidden=true;document.documentElement.dataset.membersOpen='true';$('group-members').hidden=false;};
- window.hideGroupMembers=()=>{$('group-members').hidden=true;delete document.documentElement.dataset.membersOpen};
- $('group-avatar-input').addEventListener('change',function(){const file=this.files&&this.files[0];this.value='';if(!file)return;const error=$('group-member-error');function fail(message){error.textContent=message;error.hidden=false}if(!file.type.startsWith('image/')){fail('画像ファイルを選んでください。');return}if(file.size>20*1024*1024){fail('画像は20MB以内のものを選んでください。');return}const reader=new FileReader();reader.onerror=()=>fail('画像を読み込めませんでした。');reader.onload=()=>{const img=new Image();img.onerror=()=>fail('この画像を読み込めませんでした。別の画像を選んでください。');img.onload=()=>{try{const canvas=document.createElement('canvas');canvas.width=256;canvas.height=256;const side=Math.min(img.naturalWidth,img.naturalHeight);if(!side)throw Error();const context=canvas.getContext('2d');context.fillStyle='#ffffff';context.fillRect(0,0,256,256);context.drawImage(img,(img.naturalWidth-side)/2,(img.naturalHeight-side)/2,side,side,0,0,256,256);localStorage.setItem(AVATAR_KEY,canvas.toDataURL('image/jpeg',.82));error.hidden=true;renderMembers();renderParticipantStrip()}catch{fail('アイコンを保存できませんでした。ブラウザの保存設定をご確認ください。')}};img.src=reader.result};reader.readAsDataURL(file)});
- function go(e){if(e.target.closest('[data-self]')){$('group-avatar-input').click();return}const b=e.target.closest('[data-id]');if(!b)return;const id=Number(b.dataset.id),person=ch(id);if(!person)return;
- if(e.currentTarget===$('group-member-list')&&e.target.closest('.avatar')){e.preventDefault();e.stopPropagation();showProfile(person);return;}
- if(e.currentTarget===$('group-member-list')){const savedScroll=$('group-members').querySelector('.members-scroll').scrollTop,savedGroupListScroll=groupListScroll;window.himikoReturnToMembers=()=>{window.openGroupChat();groupListScroll=savedGroupListScroll;window.showGroupMembers();const el=$('group-members').querySelector('.members-scroll');el.scrollTop=savedScroll;requestAnimationFrame(()=>{el.scrollTop=savedScroll});};}
- window.closeGroupChat();openChat(id)}
- $('group-member-list').addEventListener('click',go);$('group-participant-icons').addEventListener('click',go);$('group-messages').addEventListener('click',e=>{const button=e.target.closest('.group-person-avatar');if(!button)return;const person=ch(Number(button.dataset.id));if(person)showProfile(person)});
- function groupHistory(question,quote=null){const history=[];let used=question.length;let automatic='';for(const t of state.turns.slice(-6).reverse()){if(!Array.isArray(t.replies))continue;const shown=t.questionsReady===false?revealItems(t.replies).slice(0,Number(t.visibleCount)||0).map(x=>({id:x.person.id,text:x.text})):t.replies;const assistant=shown.map(r=>(ch(r.id)?.name||'')+'：'+r.text).join('\n').slice(0,3000);if(t.automatic){if(!automatic)automatic=assistant;continue}const user=t.question?.slice(0,1000);if(!user?.trim()||!assistant.trim())continue;if(used+user.length+assistant.length>10000)break;history.unshift({role:'user',content:user},{role:'assistant',content:assistant});used+=user.length+assistant.length}if(automatic)history.push({role:'user',content:'グループ内の自動会話（生徒はまだ発言していない場面）'},{role:'assistant',content:automatic.slice(0,3000)});if(quote)history.push({role:'user',content:'次の発言を引用してコメントします。続く私のコメントは、この引用への返信として受け止めてください。'},{role:'assistant',content:quote.name+'：'+quote.text.slice(0,1200)});history.push({role:'user',content:question});return history}
- let groupRequest=null;
- async function deliverPendingGroup(){
-  if(groupRequest)return;
-  const pending=state.turns.find(t=>t.pending&&!t.error);if(!pending)return;
-  const id=pending.requestId;groupRequest=id;
-  if(!$('group-view').hidden){busy=true;updateGroupSend();if(Number(pending.firstReplyAt)-Date.now()<=15000&&groupCanType(pending)&&!$('group-typing'))groupAppend(groupTyping(null),groupFollow());}
-  try{
-   const r=await fetch('/api/himiko-chat',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+(localStorage.getItem('himiko-inbox-token-v1')||'')},body:JSON.stringify({mode:'group',nickname:himikoNickname(),messages:groupHistory(pending.question,pending.quote)})});
-   const d=await r.json();if(!r.ok)throw Error(d.error||'接続できませんでした');if(d.membershipInbox){receiveInbox(d.membershipInbox);window.parent.postMessage({type:'himiko-inbox-refresh'},location.origin);}
-   const turn=state.turns.find(t=>t.requestId===id);if(!turn)return;
-   const replies=Array.isArray(d.replies)?d.replies.filter(x=>ch(x.id)&&typeof x.text==='string').map(x=>({...x,text:cleanSpeakerLabel(x.text,ch(x.id).name)})).filter(x=>x.text):[];
-   if(!replies.length)throw Error('回答を受け取れませんでした');
-   Object.assign(turn,{pending:false,error:'',read:true,replies:planLocalReplies(replies,turn.firstReplyAt).map((r,i)=>({...r,...(i===0&&state.turns.at(-1)!==turn&&Date.now()-turn.at>=600000?{quote:{kind:'older-question',name:'あなた',text:turn.question,target:groupBubbleId('user',turn.question,turn.at)}}:{})})),suggestions:groupQuestions(d.suggestions,d.suggestionKind==='answers'),suggestionKind:d.suggestionKind==='answers'?'answers':'questions',visibleCount:0,questionsReady:false});
-   mark(replies.map(x=>x.id));historyActivity();save();
-   if(!$('group-view').hidden){$('group-typing')?.remove();render();startGroupReveal(turn.replies,epoch,turn);}
-  }catch(err){
-   const turn=state.turns.find(t=>t.requestId===id);if(turn){turn.error=String(err.message);turn.readerIds=[];turn.readerCandidates={};turn.readCount=0;save();if(!$('group-view').hidden){busy=false;$('group-typing')?.remove();render();}}
-  }finally{if(groupRequest===id)groupRequest=null;updateGroupSend();}
- }
- $('group-messages').addEventListener('click',e=>{
-  const button=e.target.closest('[data-group-retry]');if(!button||groupRequest)return;
-  const turn=state.turns.find(t=>t.requestId===button.dataset.groupRetry&&t.pending&&t.error);if(!turn)return;
-  turn.error='';turn.questionsReady=false;save();render();deliverPendingGroup();
- });
- $('group-form').addEventListener('submit',e=>{
-  e.preventDefault();const question=$('group-input').value.trim();if(!question||groupRequest||(busy&&!groupReveal))return;
-  interruptAutomatic();cancelWaitingReplies();lastUserMessageAt=Date.now();inboxAction('presence',{active:true});
-  const retry=state.turns.findLast(t=>t.pending&&t.error&&t.question===question);
-  if(retry){retry.error='';retry.questionsReady=false;}
-  else state.turns.push({requestId:Date.now()+':'+Math.random(),question,quote:groupQuote,firstReplyAt:Date.now()+120000+Math.floor(Math.random()*360001),at:Date.now(),read:false,replies:[],pending:true,visibleCount:0,questionsReady:false,suggestions:[]});
-  state.turns=state.turns.slice(-100);save();setGroupQuote(null);busy=true;$('group-input').value='';$('group-status').hidden=true;render();deliverPendingGroup();
- });
-
- let inboxData=null,serverUnread=0;
- function inboxAction(action,extra={}){if(window.parent!==window)window.parent.postMessage({type:'himiko-inbox-action',action,...extra},location.origin)}
- function interruptAutomatic(){if(!groupReveal?.turn?.automatic)return;const t=groupReveal.turn,items=groupReveal.items.slice(0,groupReveal.index),kept=[];for(const item of items){let r=kept.find(r=>r.key===item.reply.key);if(!r){r={...item.reply,id:item.person.id,key:item.reply.key,text:'',at:item.at};kept.push(r)}r.text+=(r.text?'\n\n':'')+item.text;}inboxAction('interrupt',{batchId:t.batchId,seen:kept.map(r=>({key:r.key,text:r.text}))});t.replies=kept;t.interrupted=true;t.questionsReady=true;clearTimeout(timer);groupReveal=null;busy=false;$('group-typing')?.remove();save();updateGroupSend()}
- function receiveInbox(d){let memberRowsAdded=false;for(const b of d.batches||[]){if(!b.membershipOnly||state.turns.some(t=>t.batchId===b.id))continue;state.turns.push({automatic:true,batchId:b.id,at:b.createdAt,question:'',replies:b.replies,suggestions:[],questionsReady:true});memberRowsAdded=true;}state.turns.sort((a,b)=>(a.at||0)-(b.at||0));if(memberRowsAdded)save();const previousMembers=JSON.stringify(inboxData?.membership?.absentIds);inboxData=d;if(previousMembers!==JSON.stringify(d.membership?.absentIds)){syncGroupName();if(!$('group-members').hidden)renderMembers();if(!$('group-participant-strip').hidden)renderParticipantStrip();}for(const b of d.batches||[])for(const r of b.replies||[])if(!r.event&&r.at<=Date.now()&&r.at>Date.now()-600000)window.dispatchEvent(new CustomEvent('himiko-group-speaker',{detail:{id:r.id,at:r.at}}));inboxData=d;serverUnread=Number(d.unread)||0;for(const k of d.readKeys||[])acknowledgedKeys.add(k);refreshGroupUnread();if(busy||state.turns.some(t=>!t.automatic&&!t.error&&t.questionsReady===false)){if(memberRowsAdded&&!$('group-view').hidden)render();return;}const open=!$('group-view').hidden;let fresh=null,changed=false,revealFrom=0;for(const b of d.batches||[]){let t=state.turns.find(t=>t.batchId===b.id);if(t?.interrupted)continue;const replies=b.replies.filter(r=>ch(r.id));if(!replies.length)continue;if(t){if(t.replies.length>=replies.length)continue;revealFrom=revealItems(t.replies).length;t.replies=replies;t.questionsAt=(replies.at(-1)?.at||Date.now())+10000;fresh=t;changed=true;}else {t={automatic:true,batchId:b.id,at:b.createdAt,question:'',replies,suggestions:b.suggestions||[],suggestionKind:b.suggestionKind||'questions',questionsAt:(replies.at(-1)?.at||Date.now())+10000,questionsReady:true};state.turns.push(t);fresh=t;revealFrom=0;changed=true;}}if(!changed){if(open&&(unreadEntryPending||memberRowsAdded))render();return;}state.turns.sort((a,b)=>(a.at||0)-(b.at||0));state.turns=state.turns.slice(-100);save();if(!open)syncGroupName();if(open){const entering=unreadEntryPending;render();if(!entering&&fresh&&Date.now()-fresh.replies.at(-1).at<90000){fresh.questionsReady=false;fresh.visibleCount=revealFrom;render();startGroupReveal(fresh.replies,epoch,fresh);updateGroupSend()}}}
- window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==window.parent)return;const m=e.data;if(m?.type==='himiko-inbox-data')receiveInbox(m.data);if(m?.type==='himiko-inbox-count'){serverUnread=Number(m.count)||0;refreshGroupUnread();}if(m?.type==='himiko-inbox-error'&&m.action==='read'){for(const k of m.keys||[])acknowledgedKeys.delete(k);retryReadAt=Date.now()+5000;}if(m?.type==='himiko-open-group')window.openGroupChat();});
- const acknowledgedKeys=new Set();let retryReadAt=0;
- const inboxObserver=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{if(document.hidden||$('group-view').hidden)return;const keys=entries.filter(x=>x.isIntersecting&&x.intersectionRatio>.8).map(x=>x.target.dataset.inboxKey).filter(k=>!acknowledgedKeys.has(k));if(keys.length){keys.forEach(k=>acknowledgedKeys.add(k));refreshGroupUnread();inboxAction('read',{keys})}},{root:$('group-messages'),threshold:.8}):null;
- if(inboxObserver&&typeof MutationObserver==='function')new MutationObserver(()=>{$('group-messages-inner').querySelectorAll('.bubble-row[data-inbox-key], .group-system-event[data-inbox-key]').forEach(el=>{if(!el.inboxWatched){el.inboxWatched=true;const end=el.querySelector('.history-message-time, time')||el;end.dataset.inboxKey=el.dataset.inboxKey;inboxObserver.observe(end)}})}).observe($('group-messages-inner'),{childList:true,subtree:true});
- function presence(){if(!$('group-view').hidden&&!document.hidden)inboxAction('presence',{active:(busy&&!groupReveal)||Date.now()-lastUserMessageAt<90000||!!$('group-input').value.trim(),context:state.turns.slice(-3).flatMap(t=>[t.automatic?'':t.question,(t.questionsReady===false?revealItems(t.replies).slice(0,Number(t.visibleCount)||0).map(x=>({id:x.person.id,text:x.text})):t.replies).map(r=>(ch(r.id)?.name||'')+'：'+r.text).join('\n')]).filter(Boolean)});}
- setInterval(()=>{if(retryReadAt&&Date.now()>=retryReadAt){retryReadAt=0;$('group-messages-inner').querySelectorAll('.bubble-row[data-inbox-key], .group-system-event[data-inbox-key]').forEach(el=>{const end=el.querySelector('.history-message-time, time')||el;end.dataset.inboxKey=el.dataset.inboxKey;inboxObserver?.unobserve(end);inboxObserver?.observe(end)})}presence();if(!busy&&inboxData)receiveInbox(inboxData)},60000);document.addEventListener('visibilitychange',()=>{if(document.hidden)inboxAction('presence',{active:false});else presence()});
- if(window.parent!==window)window.parent.postMessage({type:'himiko-inbox-ready'},location.origin);
- const oldSend=sendMessage;sendMessage=async function(text){const person=currentChar,before=completedChatTurns().length;await oldSend(text);if(person&&person===currentChar&&completedChatTurns().length>before){mark([person.id])}};
- const oldRender=renderCards;renderCards=function(){oldRender();const met=seen();const list=allChars.filter(p=>Object.entries(selectedFilters).every(([g,set])=>!set.size||[...set].some(k=>matchesGroup(p,g,k)))).filter(p=>{const q=$('search-input').value.trim().toLowerCase();return !q||p.name.toLowerCase().includes(q)||(p.aliases||[]).some(name=>name.toLowerCase().includes(q))||p.period.toLowerCase().includes(q)||p.catchphrase.toLowerCase().includes(q)});const n=list.filter(p=>!p.isSpecial&&met.has(p.id)).length;const banner=document.querySelector('.group-chat-placeholder');banner.style.display='';$('group-entry-heading').hidden=false;$('group-entry-heading').style.display='';document.querySelectorAll('#card-list .char-card').forEach((card,i)=>{if(list[i]&&met.has(list[i].id))card.classList.add('group-met')});const suffix=document.documentElement.dataset.persona==='cyber'?'ぜ':'にゃ';$('filter-count').querySelector('.filter-count-text').textContent=`${list.filter(p=>!p.isSpecial).length}人の偉人（会話した人物 ${n}人）`;};
- function refreshGroupUnread(){refreshGroupPreview();const badge=$('group-unread');if(!badge)return;const keys=new Set((inboxData?.batches||[]).flatMap(b=>b.replies||[]).map(r=>r.key).filter(k=>k&&!acknowledgedKeys.has(k)));const automatic=inboxData?keys.size:serverUnread;const total=automatic+state.turns.filter(t=>!t.automatic).reduce((n,t)=>n+Math.min(Number(t.closedUnread)||0,Number(t.visibleCount)||0),0);badge.textContent=total?String(total):'';badge.hidden=!total;}
- function refreshEntryDots(){
-  const badge=$('group-entry-typing');if(!badge)return;
-  const pending=state.turns.findLast(t=>!t.automatic&&t.questionsReady===false);
-  const item=pending?timedItems(pending)[Number(pending.visibleCount)||0]:null;
-  const due=(pending?.pending?pending.firstReplyAt:0)||groupReveal?.items[groupReveal.index]?.due||item?.due||inboxData?.typing?.[0]?.at||0;
-  badge.hidden=!groupCanType(pending)||!((busy&&!pending?.pending)||due&&due-Date.now()<=15000&&due-Date.now()>-60000);
- }
- function refreshAutomaticDots(){
-  if($('group-view').hidden||document.hidden||busy||groupReveal)return;
-  const next=inboxData?.typing?.[0],wait=next?next.at-Date.now():0;
-  if(next&&wait>0&&wait<=15000&&groupCanType()){if(!$('group-typing'))groupAppend(groupTyping(allChars.find(p=>p.name===next.name)||null),groupFollow());}
-  else if(!groupReveal)$('group-typing')?.remove();
- }
- setInterval(()=>{deliverPendingGroup();advanceClosedReplies();refreshGroupUnread();refreshReadCounts();refreshPendingDots();refreshAutomaticDots();refreshEntryDots();refreshGroupSuggestions()},1000);
- load();syncGroupName();renderCards();window.addEventListener('pageshow',()=>{load();syncGroupName()});window.addEventListener('storage',e=>{if(e.key===KEY){load();syncGroupName()}});openChatDB().then(db=>new Promise((resolve,reject)=>{const r=db.transaction(CHAT_DB_STORE,'readonly').objectStore(CHAT_DB_STORE).getAll();r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error)})).then(rows=>{const ids=rows.filter(r=>Array.isArray(r.turns)&&r.turns.some(t=>t.role==='user')&&r.turns.some(t=>t.role==='assistant')).map(r=>Number(r.id)).filter(id=>ch(id));if(ids.length){mark(ids);renderCards()}}).catch(()=>{});
-})();
-</script>
 <script id="history-continuous-bubble-shape">
 (()=>{
- const selector=':is(#chat-view,#group-view) .messages :is(.bubble,.typing,.suggestion-btn)';
+ const selector='#chat-view .messages :is(.bubble,.typing,.suggestion-btn)';
  function shapePath(w,h){
   const x=6.5,right=w+5.5,top=.5,bottom=h-.5,r=Math.min((h-1)/2,23.5),tailR=23.5,tip=w+11;
   // Tail grows out of the top corner, pointing upward, like the reference.
@@ -5247,7 +5069,7 @@ document.getElementById("chat-view").addEventListener("click",function(e){
 })();
 </script>
 <script>
-(()=>{for(const id of ['messages','group-messages']){const box=document.getElementById(id);if(!box)continue;const floating=document.createElement('div');floating.className='history-floating';floating.setAttribute('aria-hidden','true');const label=document.createElement('span');floating.append(label);let timer,userUntil=0,down=false;
+(()=>{for(const id of ['messages']){const box=document.getElementById(id);if(!box)continue;const floating=document.createElement('div');floating.className='history-floating';floating.setAttribute('aria-hidden','true');const label=document.createElement('span');floating.append(label);let timer,userUntil=0,down=false;
 function attach(){if(floating.parentNode!==box)box.prepend(floating)}attach();new MutationObserver(attach).observe(box,{childList:true});
 box.addEventListener('pointerdown',()=>{down=true},{passive:true});for(const type of ['pointerup','pointercancel','pointerleave'])box.addEventListener(type,()=>{down=false;userUntil=Date.now()+1400},{passive:true});box.addEventListener('wheel',()=>{userUntil=Date.now()+1400},{passive:true});box.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(e.key))userUntil=Date.now()+1400});
 box.addEventListener('scroll',()=>{if(!down&&Date.now()>userUntil)return;userUntil=Date.now()+1400;const edge=box.getBoundingClientRect().top+3;const dates=[...box.querySelectorAll('.history-day')];const active=dates.filter(d=>d.getBoundingClientRect().bottom<edge).at(-1);if(active){label.textContent=active.textContent;floating.classList.add('is-visible')}else floating.classList.remove('is-visible');clearTimeout(timer);timer=setTimeout(()=>floating.classList.remove('is-visible'),1400)},{passive:true});}})();

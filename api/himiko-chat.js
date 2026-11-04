@@ -3449,6 +3449,7 @@ function requestData(req) {
   try { size = Buffer.byteLength(JSON.stringify(body)); } catch { size = Infinity; }
   if (size > LIMITS.bodyBytes) throw Object.assign(new Error('送信内容が大きすぎます。質問を短くしてください。'), { status: 413 });
   const { characterId, messages } = body;
+  if (body.mode === 'group' || req.himikoAutomatic === true || req.himikoBatch === true) throw Object.assign(new Error('個人チャットで質問してください。'), { status: 400 });
   const isGroup = body.mode === 'group';
   if (!isGroup && (!Number.isInteger(characterId) || !PERSONAS.has(characterId))) throw Object.assign(new Error('人物の設定を確認できません。画面を再読み込みしてください。'), { status: 400 });
   if (!Array.isArray(messages) || !messages.length || messages.length > LIMITS.messages || messages.length % 2 !== 1) throw Object.assign(new Error('会話の形式が正しくありません。新しく画面を開き直してください。'), { status: 400 });
